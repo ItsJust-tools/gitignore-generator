@@ -3,10 +3,11 @@ import type { ExportOptions, ExportResult } from '@itsjust/core';
 export const exporter = {
   format: 'json' as const,
   async export(
-    _el: HTMLElement,
+    el: HTMLElement,
     options: ExportOptions
   ): Promise<ExportResult> {
-    const content = options.data as unknown as string;
+    // Read content from a data attribute or the element text
+    const content = el.getAttribute('data-content') || el.textContent || '';
     if (!content) {
       return {
         success: false,
@@ -18,11 +19,9 @@ export const exporter = {
     }
 
     const lines = content.split('\n');
-    const templates: Record<string, string[]> = {
-      entries: [],
-      custom: [],
-    };
-    let currentSection = 'entries';
+    const entries: string[] = [];
+    const custom: string[] = [];
+    let currentSection: 'entries' | 'custom' = 'entries';
 
     for (const line of lines) {
       if (line.startsWith('# Custom rules')) {
@@ -30,7 +29,11 @@ export const exporter = {
       } else if (line.startsWith('#')) {
         continue;
       } else if (line.trim()) {
-        templates[currentSection].push(line.trim());
+        if (currentSection === 'entries') {
+          entries.push(line.trim());
+        } else {
+          custom.push(line.trim());
+        }
       }
     }
 
@@ -38,8 +41,8 @@ export const exporter = {
       {
         generated: new Date().toISOString(),
         source: 'gitignore-generator.itsjust.tools',
-        entries: templates.entries,
-        customRules: templates.custom,
+        entries,
+        customRules: custom,
       },
       null,
       2

@@ -16,7 +16,7 @@ import { gitignoreTool, buildGitignore } from '@/tool/tool-definition';
 import { ToolCanvas } from '@/tool/components/tool-canvas';
 import { ToolSidebar } from '@/tool/components/tool-sidebar';
 import { ToolToolbar } from '@/tool/components/tool-toolbar';
-import type { GitignoreState, GitignoreTemplate } from '@/tool/types';
+import type { GitignoreState } from '@/tool/types';
 import { TEMPLATES } from '@/tool/types';
 
 vi.mock('next/link', () => ({

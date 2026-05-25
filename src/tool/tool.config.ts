@@ -9,7 +9,7 @@ const toolConfig = {
   description:
     'Generate .gitignore files from 50+ templates — combine languages, frameworks, IDEs, and OS rules. All client-side, privacy-first.',
   version: '1.0.0',
-  exportFormats: ['json', 'txt'],
+  exportFormats: ['json'],
   features: {
     export: true,
     autoSave: false,

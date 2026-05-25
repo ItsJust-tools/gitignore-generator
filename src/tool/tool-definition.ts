@@ -662,6 +662,8 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     'node_modules/',
     '*.log',
   ],
+  // Handled separately via customRules state
+  custom: [''],
 };
 
 // Build the combined .gitignore content from selected templates
@@ -675,10 +677,9 @@ function buildGitignore(selectedTemplates: GitignoreTemplate[], customRules: str
 
   // Add template entries
   for (const templateId of selectedTemplates) {
-    const template = TEMPLATES.find((t) => t.id === templateId);
-    const rules = TEMPLATE_RULES[templateId];
+    const rules = TEMPLATE_RULES[templateId] as string[] | undefined;
     if (rules) {
-      if (lines.length > 0 && !lines[lines.length - 1].startsWith('#')) {
+      if (lines.length > 0 && !lines[lines.length - 1]!.startsWith('#')) {
         lines.push('');
       }
       lines.push(...rules);
@@ -723,10 +724,6 @@ export const gitignoreTool: Tool<GitignoreState> = {
     {
       format: 'json',
       loader: () => import('./exporters/json'),
-    },
-    {
-      format: 'txt',
-      loader: () => import('./exporters/txt'),
     },
   ],
 };

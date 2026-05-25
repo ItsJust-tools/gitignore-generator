@@ -19,67 +19,72 @@ async function ensureToolbarInteractable(page: import('@playwright/test').Page) 
   }
 }
 
-async function typeInNotepad(page: import('@playwright/test').Page, text: string) {
-  await ensureToolbarInteractable(page);
-  const textarea = page.locator('.notepad-textarea');
-  await textarea.fill(text);
-}
-
 test('tool loads with correct title', async ({ page }) => {
   await page.goto('/');
   const title = await page.title();
-  expect(title).toContain('Notepad');
+  expect(title).toContain('.gitignore Generator');
 });
 
-test('textarea is editable', async ({ page }) => {
-  await page.goto('/');
-  const textarea = page.locator('.notepad-textarea');
-  await textarea.fill('Hello Notepad');
-  await expect(textarea).toHaveValue('Hello Notepad');
-});
-
-test('undo/redo buttons enable/disable correctly', async ({ page }, testInfo) => {
+test('templates are visible and selectable', async ({ page }) => {
   await page.goto('/');
   await ensureToolbarInteractable(page);
+  const templateCard = page.locator('.template-card').first();
+  await expect(templateCard).toBeVisible();
+  await templateCard.click();
+  await expect(templateCard).toHaveClass(/selected/);
+});
 
-  const undoButton = page.getByRole('button', { name: 'Undo (Ctrl+Z)' });
-  const redoButton = page.getByRole('button', { name: 'Redo (Ctrl+Y)' });
-  await expect(undoButton).toBeDisabled();
-  await expect(redoButton).toBeDisabled();
+test('generate button works when templates selected', async ({ page }) => {
+  await page.goto('/');
+  await ensureToolbarInteractable(page);
+  const templateCard = page.locator('.template-card').first();
+  await templateCard.click();
 
-  if (testInfo.project.name.includes('Mobile')) {
-    const fileInput = page.locator('input[type="file"]');
-    await fileInput.evaluate((el: HTMLInputElement) => {
-      el.style.display = 'block';
-      el.style.visibility = 'visible';
-    });
-    await fileInput.setInputFiles({
-      name: 'undo-mobile.json',
-      mimeType: 'application/json',
-      buffer: Buffer.from(JSON.stringify({ text: 'undo mobile', fontSize: 16 })),
-    });
-  } else {
-    await typeInNotepad(page, 'hello world');
-  }
+  const generateButton = page.getByRole('button', { name: /Generate .gitignore/i });
+  await expect(generateButton).toBeEnabled();
+  await generateButton.click();
 
-  await expect(undoButton).toBeEnabled();
-  await expect(redoButton).toBeDisabled();
+  const gitignoreOutput = page.locator('.gitignore-output');
+  await expect(gitignoreOutput).toBeVisible();
+  const text = await gitignoreOutput.inputValue();
+  expect(text.length).toBeGreaterThan(0);
+  expect(text).toContain('#');
+});
 
-  if (testInfo.project.name.includes('Mobile')) {
-    await expect(undoButton).toBeVisible();
-    return;
-  }
+test('generate button is disabled when no templates selected and no custom rules', async ({ page }) => {
+  await page.goto('/');
+  await ensureToolbarInteractable(page);
+  const generateButton = page.getByRole('button', { name: /Generate .gitignore/i });
+  await expect(generateButton).toBeDisabled();
+});
 
-  await undoButton.click({ force: true });
-  await expect(redoButton).toBeEnabled();
+test('custom rules textarea accepts input', async ({ page }) => {
+  await page.goto('/');
+  await ensureToolbarInteractable(page);
+  const textarea = page.locator('.gitignore-textarea');
+  await textarea.fill('my-local-config/\n*.secret');
+  await expect(textarea).toHaveValue('my-local-config/\n*.secret');
+});
 
-  await redoButton.click({ force: true });
-  await expect(redoButton).toBeDisabled();
+test('filter tabs change template visibility', async ({ page }) => {
+  await page.goto('/');
+  await ensureToolbarInteractable(page);
+  const languageTab = page.getByRole('tab', { name: /Languages/i });
+  await languageTab.click();
+  const nodeTemplate = page.locator('.template-card').filter({ hasText: 'Node.js' });
+  await expect(nodeTemplate).toBeVisible();
+  const macosTemplate = page.locator('.template-card').filter({ hasText: 'macOS' });
+  await expect(macosTemplate).toHaveCount(0);
 });
 
 test('export dropdown opens and shows JSON format', async ({ page }, testInfo) => {
   await page.goto('/');
   await ensureToolbarInteractable(page);
+  // First generate some content
+  const templateCard = page.locator('.template-card').first();
+  await templateCard.click();
+  await page.getByRole('button', { name: /Generate .gitignore/i }).click();
+
   const exportButton = page.getByRole('button', { name: /export/i });
   await exportButton.click({ force: true });
   if (testInfo.project.name.includes('Mobile')) {
@@ -193,38 +198,64 @@ test('keyboard shortcuts overlay opens and closes', async ({ page, browserName }
   await expect(page.getByRole('dialog')).not.toBeVisible();
 });
 
-test('undo/redo via keyboard shortcuts', async ({ page }, testInfo) => {
-  await page.addInitScript(() => {
-    localStorage.clear();
-  });
+test('copy .gitignore to clipboard', async ({ page }) => {
   await page.goto('/');
   await ensureToolbarInteractable(page);
-  if (testInfo.project.name.includes('Mobile')) {
-    const fileInput = page.locator('input[type="file"]');
-    await fileInput.evaluate((el: HTMLInputElement) => {
-      el.style.display = 'block';
-      el.style.visibility = 'visible';
-    });
-    await fileInput.setInputFiles({
-      name: 'keyboard-mobile.json',
-      mimeType: 'application/json',
-      buffer: Buffer.from(JSON.stringify({ text: 'keyboard mobile' })),
-    });
-  } else {
-    await typeInNotepad(page, 'keyboard test');
-  }
+  // Select node template and generate
+  await page.locator('.template-card').filter({ hasText: 'Node.js' }).click();
+  await page.getByRole('button', { name: /Generate .gitignore/i }).click();
 
-  const undoButton = page.getByRole('button', { name: 'Undo (Ctrl+Z)' });
-  await expect(undoButton).toBeEnabled();
+  // Click copy button
+  const copyButton = page.getByRole('button', { name: /Copy .gitignore/i });
+  await expect(copyButton).toBeVisible();
+  await copyButton.click();
+  await expect(page.getByText('Copied!')).toBeVisible();
+});
 
-  const redoButton = page.getByRole('button', { name: 'Redo (Ctrl+Y)' });
-  await expect(redoButton).toBeDisabled();
+test('download .gitignore file', async ({ page }) => {
+  await page.goto('/');
+  await ensureToolbarInteractable(page);
+  // Select node template and generate
+  await page.locator('.template-card').filter({ hasText: 'Node.js' }).click();
+  await page.getByRole('button', { name: /Generate .gitignore/i }).click();
 
-  await page.locator('body').press('Control+z');
-  await expect(redoButton).toBeEnabled();
+  // Click download button
+  const downloadButton = page.getByRole('button', { name: /Download/i });
+  await expect(downloadButton).toBeVisible();
+  const [download] = await Promise.all([page.waitForEvent('download'), downloadButton.click()]);
+  expect(download.suggestedFilename()).toMatch(/\.gitignore/);
+});
 
-  await page.locator('body').press('Control+Shift+z');
-  await expect(undoButton).toBeEnabled();
+test('export json download triggers', async ({ page }) => {
+  await page.goto('/');
+  await ensureToolbarInteractable(page);
+  // First generate some content
+  await page.locator('.template-card').filter({ hasText: 'Node.js' }).click();
+  await page.getByRole('button', { name: /Generate .gitignore/i }).click();
+
+  const exportButton = page.getByRole('button', { name: /export/i });
+  await exportButton.click({ force: true });
+
+  const jsonOption = page.getByRole('option', { name: /JSON/ });
+  const [download] = await Promise.all([page.waitForEvent('download'), jsonOption.click()]);
+  expect(download.suggestedFilename()).toMatch(/\.json$/);
+});
+
+test('clear all button resets everything', async ({ page }) => {
+  await page.goto('/');
+  await ensureToolbarInteractable(page);
+  // Generate some content
+  await page.locator('.template-card').first().click();
+  await page.getByRole('button', { name: /Generate .gitignore/i }).click();
+  await expect(page.locator('.gitignore-output')).toBeVisible();
+
+  // Clear
+  const clearButton = page.getByRole('button', { name: /Clear All/i });
+  await expect(clearButton).toBeVisible();
+  await clearButton.click();
+
+  await expect(page.locator('.gitignore-output')).toHaveCount(0);
+  await expect(page.getByText('Select templates below')).toBeVisible();
 });
 
 test('mobile sidebar backdrop closes sidebar', async ({ page }) => {
@@ -241,120 +272,6 @@ test('mobile sidebar backdrop closes sidebar', async ({ page }) => {
   await expect(sidebar).toHaveClass(/collapsed/);
 });
 
-test('import from json file works', async ({ page }) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-
-  const fileContent = JSON.stringify({ text: 'Imported Note' });
-
-  const fileInput = page.locator('input[type="file"]');
-  await fileInput.evaluate((el: HTMLInputElement) => {
-    el.style.display = 'block';
-    el.style.visibility = 'visible';
-  });
-  await fileInput.setInputFiles({
-    name: 'test.json',
-    mimeType: 'application/json',
-    buffer: Buffer.from(fileContent),
-  });
-
-  await expect
-    .poll(() => page.locator('.notepad-textarea').inputValue())
-    .toContain('Imported Note');
-});
-
-test('export json download triggers', async ({ page }) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-
-  const exportButton = page.getByRole('button', { name: /export/i });
-  await exportButton.click({ force: true });
-
-  const jsonOption = page.getByRole('option', { name: /JSON/ });
-  const [download] = await Promise.all([page.waitForEvent('download'), jsonOption.click()]);
-  expect(download.suggestedFilename()).toMatch(/\.json$/);
-});
-
-test('image export downloads trigger for screenshot formats', async ({ page }, testInfo) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-
-  if (testInfo.project.name.includes('Mobile')) {
-    await expect(page.getByRole('button', { name: /export/i })).toBeVisible();
-    return;
-  }
-
-  const expected: Array<{ option: RegExp; ext: RegExp }> = [
-    { option: /PNG/, ext: /\.png$/i },
-    { option: /JPEG/, ext: /\.(jpg|jpeg)$/i },
-    { option: /webp/i, ext: /\.webp$/i },
-  ];
-
-  for (const format of expected) {
-    await ensureToolbarInteractable(page);
-    await page.getByRole('button', { name: /export/i }).click({ force: true });
-    const option = page.getByRole('option', { name: format.option });
-    await expect(option).toBeVisible();
-    const [download] = await Promise.all([page.waitForEvent('download'), option.click()]);
-    expect(download.suggestedFilename()).toMatch(format.ext);
-  }
-});
-
-test('pdf export triggers print dialog', async ({ page }, testInfo) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-
-  const exportButton = page.getByRole('button', { name: /export/i });
-  await exportButton.click({ force: true });
-
-  if (testInfo.project.name.includes('Mobile')) {
-    await expect(exportButton).toBeVisible();
-    return;
-  }
-
-  const pdfOption = page.getByRole('option', { name: /pdf/i });
-  await expect(pdfOption).toBeVisible();
-
-  // Intercept the hidden print iframe via MutationObserver + console log
-  const consolePromise = new Promise<string>((resolve) => {
-    const handler = (msg: import('@playwright/test').ConsoleMessage) => {
-      const text = msg.text();
-      if (text.includes('__printIntercepted__')) {
-        page.off('console', handler);
-        resolve(text);
-      }
-    };
-    page.on('console', handler);
-  });
-
-  await page.evaluate(() => {
-    const observer = new MutationObserver((mutations) => {
-      for (const m of mutations) {
-        for (const node of m.addedNodes) {
-          if (node instanceof HTMLIFrameElement) {
-            try {
-              const cw = (node as HTMLIFrameElement).contentWindow;
-              if (cw) {
-                cw.print = () => {
-                  console.log('__printIntercepted__');
-                };
-              }
-            } catch {
-              // cross-origin iframe, ignore
-            }
-          }
-        }
-      }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-  });
-
-  await pdfOption.click();
-
-  const consoleText = await consolePromise;
-  expect(consoleText).toContain('__printIntercepted__');
-});
-
 test('404 page works', async ({ page }) => {
   const response = await page.goto('/this-page-does-not-exist');
   expect(response?.status()).toBe(404);
@@ -369,21 +286,3 @@ test('visual regression — default view', async ({ page, browserName }) => {
   await page.waitForSelector('.tool-shell-canvas');
   await expect(page.locator('.tool-shell')).toBeVisible();
 });
-
-// test('visual regression — dark mode', async ({ page }) => {
-//   await page.goto('/');
-//   await page.waitForSelector('.tool-shell-canvas');
-//   const themeButton = page.getByRole('button', { name: /Switch to dark mode/i });
-//   if (await themeButton.isVisible()) {
-//     await themeButton.click();
-//     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-//     await expect(page).toHaveScreenshot('tool-dark.png', { maxDiffPixels: 100 });
-//   }
-// });
-
-// test('visual regression — mobile view', async ({ page }) => {
-//   await page.setViewportSize({ width: 375, height: 667 });
-//   await page.goto('/');
-//   await page.waitForSelector('.tool-shell-canvas');
-//   await expect(page).toHaveScreenshot('tool-mobile.png', { maxDiffPixels: 100 });
-// });
