@@ -1,7 +1,6 @@
 import type { Tool } from '@itsjust/core';
 import toolConfig from './tool.config';
 import type { GitignoreState, GitignoreTemplate } from './types';
-import { TEMPLATES } from './types';
 
 function isGitignoreState(value: unknown): value is GitignoreState {
   if (typeof value !== 'object' || value === null) return false;

@@ -1,6 +1,8 @@
 # .gitignore Generator
 
 [![Live](https://img.shields.io/badge/Live-gitignore.itsjust.tools-2ea043?style=for-the-badge&logo=vercel&logoColor=white)](https://gitignore-generator.itsjust.tools)
+[![CI](https://github.com/ItsJust-tools/gitignore-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/ItsJust-tools/gitignore-generator/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Generate `.gitignore` files from **50+ templates** — combine languages, frameworks, IDEs, OS rules, and custom entries. All client-side, privacy-first, zero dependencies on external services.
 

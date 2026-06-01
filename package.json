@@ -2,6 +2,24 @@
   "name": "gitignore-generator",
   "version": "1.4.0",
   "private": true,
+  "description": "Generate .gitignore files from 50+ templates — combine languages, frameworks, IDEs, OS rules, and custom entries. All client-side, privacy-first.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ItsJust-tools/gitignore-generator.git"
+  },
+  "homepage": "https://gitignore-generator.itsjust.tools",
+  "bugs": {
+    "url": "https://github.com/ItsJust-tools/gitignore-generator/issues"
+  },
+  "keywords": [
+    "gitignore",
+    "generator",
+    ".gitignore",
+    "git",
+    "templates",
+    "boilerplate"
+  ],
   "workspaces": [
     "packages/*"
   ],
@@ -55,7 +73,7 @@
     "@vitejs/plugin-react": "^6.0.2",
     "@vitest/coverage-v8": "^4.1.6",
     "depcheck": "^1.4.7",
-    "eslint": "^10.4.0",
+    "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
