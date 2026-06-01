@@ -1,6 +1,6 @@
 {
   "name": "gitignore-generator",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "description": "Generate .gitignore files from 50+ templates — combine languages, frameworks, IDEs, OS rules, and custom entries. All client-side, privacy-first.",
   "license": "MIT",

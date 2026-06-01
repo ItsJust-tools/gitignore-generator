@@ -73,10 +73,10 @@ Open [http://localhost:3000](http://localhost:3000) to see the tool.
 ## Template Categories
 
 ### Languages (19)
-Node.js, Python, Java, Rust, Go, Ruby, .NET, C, C++, Swift, Kotlin, Scala, Elixir, Haskell, Julia, Lua, Perl, R, MATLAB
+Node.js, Python, Java, Rust, Go, Ruby, .NET, C, C++, Swift, Kotlin, Scala, Elixir, Haskell, Julia, Lua, Perl, R, MATLAB, Deno, Bun
 
-### Frameworks (16)
-React, Next.js, Vue, Nuxt, Svelte, Angular, Gatsby, Eleventy, Django, Ruby on Rails, Laravel, Spring Boot, Sass, Android, Flutter, Docker
+### Frameworks (17)
+React, Next.js, Vue, Nuxt, Svelte, Angular, Gatsby, Eleventy, Django, Ruby on Rails, Laravel, Spring Boot, Sass, Android, Flutter, Docker, Solid.js
 
 ### IDEs & Editors (6)
 VS Code, JetBrains, Vim, Emacs, Visual Studio, Xcode

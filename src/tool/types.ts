@@ -51,6 +51,9 @@ export type GitignoreTemplate =
   | 'sass'
   | 'gatsby'
   | 'eleventy'
+  | 'deno'
+  | 'bun'
+  | 'solidjs'
   | 'custom';
 
 export type VisibilityFilter = 'all' | 'os' | 'ide' | 'language' | 'framework';
@@ -139,6 +142,10 @@ export const TEMPLATES: TemplateInfo[] = [
   // Platforms & Tools
   { id: 'android', label: 'Android', description: '.gradle/, build/, local.properties', category: 'framework', icon: '🤖' },
   { id: 'flutter', label: 'Flutter', description: '.dart_tool/, build/, .flutter-plugins', category: 'framework', icon: '💙' },
+  // Platforms & Tools
+  { id: 'deno', label: 'Deno', description: 'deno.lock, .deno/, dist/', category: 'framework', icon: '🦕' },
+  { id: 'bun', label: 'Bun', description: 'bun.lock, node_modules/', category: 'framework', icon: '🥟' },
+  { id: 'solidjs', label: 'Solid.js', description: 'node_modules, dist/, .solid/', category: 'framework', icon: '🔷' },
   { id: 'docker', label: 'Docker', description: '.dockerignore (companion)', category: 'framework', icon: '🐳' },
   { id: 'terraform', label: 'Terraform', description: '.terraform/, *.tfstate', category: 'framework', icon: '🏗️' },
   { id: 'ansible', label: 'Ansible', description: '*.retry, inventory/', category: 'framework', icon: '🛝' },

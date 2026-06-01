@@ -205,12 +205,33 @@ describe('buildGitignore with specific templates', () => {
     expect(result).toContain('build/');
   });
 
-  it('generates LaTeX output', () => {
+  it('generates combined JetBrains/Unity/Godot output', () => {
     const result = buildGitignore(['jetbrains', 'unity', 'godot'], '');
     expect(result).toContain('JetBrains');
     expect(result).toContain('Unity');
     expect(result).toContain('Godot');
     expect(result).toContain('.idea/');
     expect(result).toContain('Library/');
+  });
+
+  it('generates Deno output', () => {
+    const result = buildGitignore(['deno'], '');
+    expect(result).toContain('# Deno');
+    expect(result).toContain('.deno/');
+    expect(result).toContain('deno.lock');
+  });
+
+  it('generates Bun output', () => {
+    const result = buildGitignore(['bun'], '');
+    expect(result).toContain('# Bun');
+    expect(result).toContain('bun.lock');
+    expect(result).toContain('node_modules/');
+  });
+
+  it('generates Solid.js output', () => {
+    const result = buildGitignore(['solidjs'], '');
+    expect(result).toContain('# Solid.js');
+    expect(result).toContain('.solid/');
+    expect(result).toContain('dist/');
   });
 });
