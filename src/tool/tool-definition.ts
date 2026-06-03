@@ -281,6 +281,28 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     'coderepo/',
     'xcp/',
   ],
+  zig: [
+    '# Zig',
+    'zig-out/',
+    '.zig-cache/',
+    '*.o',
+    '*.obj',
+    '*.pdb',
+    '*.exe',
+    '*.out',
+    '*.wasm',
+    '*.log',
+  ],
+  crystal: [
+    '# Crystal',
+    '.crystal/',
+    'lib/',
+    'bin/',
+    '*.dwarf',
+    '*.crystal-*',
+    '.shards/',
+    'shards.lock',
+  ],
 
   // Frameworks
   react: [

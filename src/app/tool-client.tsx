@@ -11,6 +11,7 @@ import {
   ToolCanvas,
   ToolToolbar,
   ToolSidebar,
+  TEMPLATES,
 } from '@/tool';
 import type { GitignoreTemplate, VisibilityFilter } from '@/tool/types';
 
@@ -99,6 +100,25 @@ export default function ToolClient() {
       visibilityFilter: 'all',
       copied: false,
     }));
+  }, [setToolData]);
+
+  const handleSelectAll = useCallback(() => {
+    setToolData((prev) => {
+      const currentFilter = prev.visibilityFilter;
+      let filtered = TEMPLATES;
+      if (currentFilter !== 'all') {
+        filtered = filtered.filter((t) => t.category === currentFilter);
+      }
+      const allVisibleIds: GitignoreTemplate[] = filtered.map((t) => t.id);
+      return {
+        ...prev,
+        selectedTemplates: [...new Set([...prev.selectedTemplates, ...allVisibleIds])],
+      };
+    });
+  }, [setToolData]);
+
+  const handleDeselectAll = useCallback(() => {
+    setToolData((prev) => ({ ...prev, selectedTemplates: [], outputContent: '', copied: false }));
   }, [setToolData]);
 
   const handleCopy = useCallback(() => {
@@ -230,6 +250,8 @@ export default function ToolClient() {
       onSearchChange={handleSearchChange}
       onGenerate={handleGenerate}
       onClear={handleClear}
+      onSelectAll={handleSelectAll}
+      onDeselectAll={handleDeselectAll}
     />
   );
 

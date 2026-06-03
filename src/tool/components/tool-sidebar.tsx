@@ -12,6 +12,8 @@ interface ToolSidebarProps {
   onSearchChange: (query: string) => void;
   onGenerate: () => void;
   onClear: () => void;
+  onSelectAll?: () => void;
+  onDeselectAll?: () => void;
 }
 
 export function ToolSidebar({
@@ -22,6 +24,8 @@ export function ToolSidebar({
   onSearchChange,
   onGenerate,
   onClear,
+  onSelectAll,
+  onDeselectAll,
 }: ToolSidebarProps) {
   const filteredTemplates = useMemo(() => {
     let list = TEMPLATES;
@@ -81,6 +85,26 @@ export function ToolSidebar({
       {selectedCount > 0 && (
         <div className="sidebar-section selection-summary">
           <span className="selection-badge">{selectedCount} selected</span>
+          {onDeselectAll && onSelectAll && (
+            <div className="selection-actions">
+              <button
+                type="button"
+                className="selection-action-btn"
+                onClick={onSelectAll}
+                aria-label="Select all visible templates"
+              >
+                Select All Visible
+              </button>
+              <button
+                type="button"
+                className="selection-action-btn"
+                onClick={onDeselectAll}
+                aria-label="Deselect all templates"
+              >
+                Deselect All
+              </button>
+            </div>
+          )}
         </div>
       )}
 

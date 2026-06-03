@@ -9,6 +9,8 @@ export type GitignoreTemplate =
   | 'c'
   | 'cpp'
   | 'swift'
+  | 'zig'
+  | 'crystal'
   | 'android'
   | 'flutter'
   | 'react'
@@ -110,6 +112,8 @@ export const TEMPLATES: TemplateInfo[] = [
   { id: 'perl', label: 'Perl', description: 'blib/, _build/', category: 'language', icon: '🐪' },
   { id: 'r', label: 'R', description: '.Rhistory, .RData, .Rproj.user', category: 'language', icon: '📊' },
   { id: 'matlab', label: 'MATLAB', description: '*.asv, *.m~, slprj/', category: 'language', icon: '🧮' },
+  { id: 'zig', label: 'Zig', description: 'zig-out/, .zig-cache/, *.o', category: 'language', icon: '⚡' },
+  { id: 'crystal', label: 'Crystal', description: '.crystal/, lib/, *.dwarf', category: 'language', icon: '💎' },
 
   // Frameworks
   { id: 'react', label: 'React', description: 'node_modules, build/, .env.local', category: 'framework', icon: '⚛️' },
