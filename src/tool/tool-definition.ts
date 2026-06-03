@@ -523,14 +523,11 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     '._*',
     '.Spotlight-V100',
     '.Trashes',
-    'ehthumbs.db',
-    'Thumbs.db',
     '.fseventsd',
     '.AppleDouble',
-    'Icon\\r',
-    'Network Trash Folder',
-    'Temporary Items',
     '.apdisk',
+    '.AppleDB',
+    '.com.apple.timemachine.donotpresent',
   ],
   windows: [
     '# Windows',
@@ -726,9 +723,10 @@ function buildGitignore(selectedTemplates: GitignoreTemplate[], customRules: str
 
   // Add template entries
   for (const templateId of selectedTemplates) {
-    const rules = TEMPLATE_RULES[templateId] as string[] | undefined;
-    if (rules) {
-      if (lines.length > 0 && !lines[lines.length - 1]!.startsWith('#')) {
+    const rules = TEMPLATE_RULES[templateId];
+    if (rules && rules.length > 0) {
+      const lastLine = lines[lines.length - 1];
+      if (lastLine !== undefined && !lastLine.startsWith('#')) {
         lines.push('');
       }
       lines.push(...rules);

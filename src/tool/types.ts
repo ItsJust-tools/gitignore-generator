@@ -58,7 +58,7 @@ export type GitignoreTemplate =
   | 'solidjs'
   | 'custom';
 
-export type VisibilityFilter = 'all' | 'os' | 'ide' | 'language' | 'framework';
+export type VisibilityFilter = 'all' | 'os' | 'ide' | 'language' | 'framework' | 'platform';
 
 export interface GitignoreState {
   selectedTemplates: GitignoreTemplate[];
@@ -79,7 +79,7 @@ export interface TemplateInfo {
   id: GitignoreTemplate;
   label: string;
   description: string;
-  category: 'os' | 'ide' | 'language' | 'framework';
+  category: 'os' | 'ide' | 'language' | 'framework' | 'platform';
   icon: string;
 }
 
@@ -88,6 +88,7 @@ export const TEMPLATE_CATEGORIES: TemplateCategory[] = [
   { id: 'language', label: 'Languages', icon: '💻' },
   { id: 'framework', label: 'Frameworks', icon: '🛠️' },
   { id: 'ide', label: 'IDEs & Editors', icon: '✏️' },
+  { id: 'platform', label: 'Platforms & Tools', icon: '🧰' },
   { id: 'os', label: 'Operating Systems', icon: '💿' },
 ];
 
@@ -144,19 +145,18 @@ export const TEMPLATES: TemplateInfo[] = [
   { id: 'linux', label: 'Linux', description: '*~, .fuse_hidden*', category: 'os', icon: '🐧' },
 
   // Platforms & Tools
-  { id: 'android', label: 'Android', description: '.gradle/, build/, local.properties', category: 'framework', icon: '🤖' },
-  { id: 'flutter', label: 'Flutter', description: '.dart_tool/, build/, .flutter-plugins', category: 'framework', icon: '💙' },
-  // Platforms & Tools
-  { id: 'deno', label: 'Deno', description: 'deno.lock, .deno/, dist/', category: 'framework', icon: '🦕' },
-  { id: 'bun', label: 'Bun', description: 'bun.lock, node_modules/', category: 'framework', icon: '🥟' },
-  { id: 'solidjs', label: 'Solid.js', description: 'node_modules, dist/, .solid/', category: 'framework', icon: '🔷' },
-  { id: 'docker', label: 'Docker', description: '.dockerignore (companion)', category: 'framework', icon: '🐳' },
-  { id: 'terraform', label: 'Terraform', description: '.terraform/, *.tfstate', category: 'framework', icon: '🏗️' },
-  { id: 'ansible', label: 'Ansible', description: '*.retry, inventory/', category: 'framework', icon: '🛝' },
-  { id: 'unity', label: 'Unity', description: 'Library/, Temp/, Build/', category: 'framework', icon: '🎮' },
-  { id: 'unrealengine', label: 'Unreal Engine', description: 'DerivedDataCache/, Intermediate/', category: 'framework', icon: '🎯' },
-  { id: 'godot', label: 'Godot', description: '.godot/, export/', category: 'framework', icon: '🎮' },
-  { id: 'jekyll', label: 'Jekyll', description: '_site/, .jekyll-cache/', category: 'framework', icon: '📝' },
-  { id: 'hugo', label: 'Hugo', description: 'public/, resources/', category: 'framework', icon: '🐹' },
-  { id: 'gitbook', label: 'GitBook', description: '_book/, book/', category: 'framework', icon: '📖' },
+  { id: 'android', label: 'Android', description: '.gradle/, build/, local.properties', category: 'platform', icon: '🤖' },
+  { id: 'flutter', label: 'Flutter', description: '.dart_tool/, build/, .flutter-plugins', category: 'platform', icon: '💙' },
+  { id: 'deno', label: 'Deno', description: 'deno.lock, .deno/, dist/', category: 'platform', icon: '🦕' },
+  { id: 'bun', label: 'Bun', description: 'bun.lock, node_modules/', category: 'platform', icon: '🥟' },
+  { id: 'solidjs', label: 'Solid.js', description: 'node_modules, dist/, .solid/', category: 'platform', icon: '🔷' },
+  { id: 'docker', label: 'Docker', description: '.dockerignore (companion)', category: 'platform', icon: '🐳' },
+  { id: 'terraform', label: 'Terraform', description: '.terraform/, *.tfstate', category: 'platform', icon: '🏗️' },
+  { id: 'ansible', label: 'Ansible', description: '*.retry, inventory/', category: 'platform', icon: '🛝' },
+  { id: 'unity', label: 'Unity', description: 'Library/, Temp/, Build/', category: 'platform', icon: '🎮' },
+  { id: 'unrealengine', label: 'Unreal Engine', description: 'DerivedDataCache/, Intermediate/', category: 'platform', icon: '🎯' },
+  { id: 'godot', label: 'Godot', description: '.godot/, export/', category: 'platform', icon: '🎮' },
+  { id: 'jekyll', label: 'Jekyll', description: '_site/, .jekyll-cache/', category: 'platform', icon: '📝' },
+  { id: 'hugo', label: 'Hugo', description: 'public/, resources/', category: 'platform', icon: '🐹' },
+  { id: 'gitbook', label: 'GitBook', description: '_book/, book/', category: 'platform', icon: '📖' },
 ];
