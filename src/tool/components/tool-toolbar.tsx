@@ -15,3 +15,5 @@ export function ToolToolbar() {
     </div>
   );
 }
+
+ToolToolbar.displayName = 'ToolToolbar';

@@ -56,6 +56,7 @@ export type GitignoreTemplate =
   | 'deno'
   | 'bun'
   | 'solidjs'
+  | 'gradle'
   | 'custom';
 
 export type VisibilityFilter = 'all' | 'os' | 'ide' | 'language' | 'framework' | 'platform';
@@ -159,4 +160,7 @@ export const TEMPLATES: TemplateInfo[] = [
   { id: 'jekyll', label: 'Jekyll', description: '_site/, .jekyll-cache/', category: 'platform', icon: '📝' },
   { id: 'hugo', label: 'Hugo', description: 'public/, resources/', category: 'platform', icon: '🐹' },
   { id: 'gitbook', label: 'GitBook', description: '_book/, book/', category: 'platform', icon: '📖' },
+
+  // Build Tools
+  { id: 'gradle', label: 'Gradle', description: '.gradle/, build/, local.properties', category: 'platform', icon: '🏗️' },
 ];

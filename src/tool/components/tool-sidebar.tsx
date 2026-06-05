@@ -183,3 +183,5 @@ export function ToolSidebar({
     </div>
   );
 }
+
+ToolSidebar.displayName = 'ToolSidebar';

@@ -708,8 +708,27 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     '.solid/',
     'public/build/',
   ],
-  // Handled separately via customRules state
-  custom: [''],
+  gradle: [
+    '# Gradle',
+    '.gradle/',
+    'build/',
+    '!gradle/wrapper/gradle-wrapper.jar',
+    '!**/src/main/**/build/',
+    '!**/src/test/**/build/',
+    '*.class',
+    '*.jar',
+    '*.war',
+    '*.nar',
+    '*.ear',
+    '*.zip',
+    '*.tar.gz',
+    '*.rar',
+    'local.properties',
+    '.gradletasknamecache',
+    'generated/',
+  ],
+  // Handled separately via customRules state (not a templated set)
+  custom: [],
 };
 
 // Build the combined .gitignore content from selected templates

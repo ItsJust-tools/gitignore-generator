@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Gradle template**: New build tool template for Gradle-based projects (distinct from Java/Android templates).
+
+### Fixed
+
+- **Custom template no longer outputs empty line**: The `custom` entry in `TEMPLATE_RULES` was `['']` — a dummy entry with an empty string. Changed to `[]` (empty array) so it never produces spurious blank lines.
+- **Tool config description mismatch**: Updated from "50+ templates" to "60+" to match the actual template count.
+
+### Changed
+
+- **displayName added**: All three tool-specific components (`ToolCanvas`, `ToolSidebar`, `ToolToolbar`) now explicitly set `displayName` per project conventions.
+
 ## [1.4.0] - 2026-05-23
 
 ### Changed

@@ -10,13 +10,26 @@ interface ToolCanvasProps {
   onDownload?: () => void;
 }
 
+/**
+ * Main canvas component for the .gitignore Generator.
+ * Shows the generated .gitignore output with line numbers
+ * and copy/download actions, or an empty state prompting template selection.
+ */
 export function ToolCanvas({ state, canvasRef, onCopy, onDownload }: ToolCanvasProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const lineCount = state.outputContent ? state.outputContent.split('\n').length : 0;
 
+  /**
+   * Fallback copy handler used when no external onCopy is provided.
+   * The parent ToolClient manages the actual visual feedback via
+   * the 'copied' state field.
+   */
   const handleCopy = useCallback(() => {
     if (state.outputContent && navigator.clipboard) {
-      navigator.clipboard.writeText(state.outputContent).catch(() => {});
+      navigator.clipboard.writeText(state.outputContent).catch(() => {
+        // Clipboard write failed silently — parent ToolClient manages toast notifications
+        // and the 'copied' state field for visual feedback.
+      });
     }
   }, [state.outputContent]);
 
@@ -61,9 +74,9 @@ export function ToolCanvas({ state, canvasRef, onCopy, onDownload }: ToolCanvasP
           <div className="gitignore-actions">
             <button
               type="button"
-              className="gitignore-btn gitignore-btn-primary"
+              className={`gitignore-btn gitignore-btn-primary${state.copied ? ' copied' : ''}`}
               onClick={onCopy || handleCopy}
-              aria-label="Copy .gitignore to clipboard"
+              aria-label={state.copied ? 'Copied to clipboard' : 'Copy .gitignore to clipboard'}
             >
               {state.copied ? 'Copied!' : 'Copy to Clipboard'}
             </button>
@@ -91,3 +104,5 @@ export function ToolCanvas({ state, canvasRef, onCopy, onDownload }: ToolCanvasP
     </div>
   );
 }
+
+ToolCanvas.displayName = 'ToolCanvas';
