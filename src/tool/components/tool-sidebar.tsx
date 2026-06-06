@@ -2,7 +2,7 @@
 
 import type { GitignoreState, GitignoreTemplate, VisibilityFilter } from '../types';
 import { TEMPLATES, TEMPLATE_CATEGORIES } from '../types';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 
 interface ToolSidebarProps {
   state: GitignoreState;
@@ -27,6 +27,30 @@ export function ToolSidebar({
   onSelectAll,
   onDeselectAll,
 }: ToolSidebarProps) {
+  const filterTabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  /**
+   * Handle keyboard arrow navigation on the filter tab bar.
+   * Left/up moves to previous tab, right/down moves to next tab.
+   */
+  const handleFilterTabKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLButtonElement>, currentIndex: number) => {
+      const tabs = filterTabRefs.current;
+      if (!tabs) return;
+      let nextIndex: number | null = null;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        nextIndex = (currentIndex + 1) % tabs.length;
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+      }
+      if (nextIndex !== null) {
+        tabs[nextIndex]?.focus();
+      }
+    },
+    []
+  );
   const filteredTemplates = useMemo(() => {
     let list = TEMPLATES;
 
@@ -65,13 +89,15 @@ export function ToolSidebar({
           />
         </div>
         <div className="filter-tabs" role="tablist" aria-label="Template category filter">
-          {TEMPLATE_CATEGORIES.map((cat) => (
+          {TEMPLATE_CATEGORIES.map((cat, i) => (
             <button
               key={cat.id}
+              ref={(el) => { filterTabRefs.current[i] = el; }}
               type="button"
               role="tab"
               className={`filter-tab ${state.visibilityFilter === cat.id ? 'active' : ''}`}
               onClick={() => onFilterChange(cat.id as VisibilityFilter)}
+              onKeyDown={(e) => handleFilterTabKeyDown(e, i)}
               aria-selected={state.visibilityFilter === cat.id}
               aria-label={`${cat.label} filter`}
             >
@@ -152,7 +178,7 @@ export function ToolSidebar({
             onChange={(e) => onCustomRulesChange(e.target.value)}
             className="gitignore-textarea"
             aria-label="Custom .gitignore rules"
-            placeholder="Add your own rules here...&#10;e.g.&#10;my-secrets/&#10;*.local&#10;!important.config"
+            placeholder={'Add your own rules here...\ne.g.\nmy-secrets/\n*.local\n!important.config\n# Or a comment explaining a rule\nbuild-output/'}
             rows={4}
           />
         </div>

@@ -13,6 +13,13 @@ function isGitignoreState(value: unknown): value is GitignoreState {
 }
 
 // Template definitions — each returns the .gitignore content for that template
+// Keyed by GitignoreTemplate id, each value is an array of lines to include.
+// The first line should be a comment (# Name) describing the template.
+/**
+ * Map of gitignore template rules, keyed by template ID.
+ * Each entry is an array of lines (comments and rules) to include
+ * when that template is selected.
+ */
 const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
   // Languages
   node: [
@@ -731,7 +738,18 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
   custom: [],
 };
 
-// Build the combined .gitignore content from selected templates
+/**
+ * Build a complete .gitignore file content string from selected templates
+ * and optional custom rules.
+ *
+ * Generates a header comment with date and tool attribution, then appends
+ * each selected template's rules (grouped by template), followed by any
+ * custom rules provided by the user.
+ *
+ * @param selectedTemplates - Array of template IDs to include
+ * @param customRules - Raw string of custom .gitignore rules (one per line)
+ * @returns The complete .gitignore content as a string, with trailing newline
+ */
 function buildGitignore(selectedTemplates: GitignoreTemplate[], customRules: string): string {
   const lines: string[] = [];
 

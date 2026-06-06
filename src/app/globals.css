@@ -992,6 +992,17 @@ body {
   border-color: var(--accent);
 }
 
+[data-contrast='more'] .filter-tab.active {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.filter-tab:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
 .selection-summary {
   padding: 0.5rem 1rem;
   display: flex;
