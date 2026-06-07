@@ -56,8 +56,7 @@ export type GitignoreTemplate =
   | 'deno'
   | 'bun'
   | 'solidjs'
-  | 'gradle'
-  | 'custom';
+  | 'gradle';
 
 export type VisibilityFilter = 'all' | 'os' | 'ide' | 'language' | 'framework' | 'platform';
 

@@ -734,8 +734,6 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     '.gradletasknamecache',
     'generated/',
   ],
-  // Handled separately via customRules state (not a templated set)
-  custom: [],
 };
 
 /**
