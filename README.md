@@ -97,6 +97,63 @@ Android, Flutter, Deno, Bun, Solid.js, Gradle, Docker, Terraform, Ansible, Unity
 
 Everything runs in your browser. No data is sent to any server.
 
+## Architecture
+
+This tool follows the ItsJust Template architecture with Next.js App Router:
+
+```
+src/
+├── app/                    # Next.js routes, layout, and metadata
+│   ├── layout.tsx          # Root layout with theme provider
+│   ├── page.tsx            # Main tool route
+│   ├── help/page.tsx       # Help / usage guide page
+│   ├── tool-client.tsx     # Tool runtime wiring (state, effects, callbacks)
+│   ├── globals.css         # Theme variables, CSS custom properties
+│   └── ...
+├── lib/                    # Shared utilities
+│   ├── utils.ts            # cn() helper, format utilities
+│   └── seo.ts              # Metadata and JSON-LD generation
+├── tool/                   # Tool-specific logic
+│   ├── components/
+│   │   ├── tool-canvas.tsx     # .gitignore output display with line numbers
+│   │   ├── tool-sidebar.tsx    # Template browser, search, filters, custom rules
+│   │   └── tool-toolbar.tsx    # Help link and keyboard shortcut hints
+│   ├── exporters/
+│   │   └── json.ts         # Structured JSON export
+│   ├── index.ts            # Public exports barrel
+│   ├── tool-definition.ts  # Tool state, buildGitignore(), TEMPLATE_RULES, serialize/deserialize
+│   ├── tool.config.ts      # Tool metadata, shortcuts, theme
+│   └── types.ts            # TypeScript types, TEMPLATES, TEMPLATE_CATEGORIES
+```
+
+### Key Modules
+
+- **`tool-definition.ts`** — Contains the `buildGitignore()` function that merges selected template rules with custom entries, the `TEMPLATE_RULES` map (60+ gitignore rule sets), and the tool's serialize/deserialize logic for import/export/sharing.
+- **`tool-sidebar.tsx`** — Template browser with category filtering, search, multi-select, and custom rules editor. Memoised filtered template list for performance.
+- **`tool-canvas.tsx`** — Read-only output view with synchronised line numbers, copy-to-clipboard with visual feedback, and direct file download.
+- **`tool-client.tsx`** — Wires everything together: URL state sharing (lz-string compressed), undo/redo, toast notifications, and keyboard shortcut handlers.
+
+### Data Flow
+
+1. User browses/searches templates in the sidebar and toggles selections.
+2. `tool-client.tsx` updates the tool state via `setToolData()`.
+3. On "Generate", `buildGitwinner()` scans `selectedTemplates`, looks up each in `TEMPLATE_RULES`, and concatenates the rules with a header comment.
+4. The generated content is displayed in `ToolCanvas` with line numbers.
+5. User can copy, download, or share (URL-encoded with lz-string compression).
+
+### State Shape
+
+```typescript
+interface GitignoreState {
+  selectedTemplates: GitignoreTemplate[];  // Array of template IDs
+  customRules: string;                     // User-typed custom .gitignore entries
+  outputContent: string;                   // Generated .gitignore body
+  visibilityFilter: VisibilityFilter;      // 'all' | 'language' | 'framework' | 'ide' | 'os' | 'platform'
+  searchQuery: string;                     // Filter text
+  copied: boolean;                         // Clipboard feedback flag
+}
+```
+
 ## Deployment
 
 Deploy to Vercel with zero configuration:

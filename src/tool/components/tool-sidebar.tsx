@@ -87,6 +87,16 @@ export function ToolSidebar({
             aria-label="Search templates"
             placeholder="Search templates..."
           />
+          {state.searchQuery && (
+            <button
+              type="button"
+              className="search-clear-btn"
+              onClick={() => onSearchChange('')}
+              aria-label="Clear search"
+            >
+              ✕
+            </button>
+          )}
         </div>
         <div className="filter-tabs" role="tablist" aria-label="Template category filter">
           {TEMPLATE_CATEGORIES.map((cat, i) => (
@@ -195,7 +205,7 @@ export function ToolSidebar({
         >
           Generate .gitignore
         </button>
-        {state.outputContent && (
+        {(state.outputContent || selectedCount > 0 || state.customRules.trim()) && (
           <button
             type="button"
             className="gitignore-btn gitignore-btn-outline gitignore-btn-full"

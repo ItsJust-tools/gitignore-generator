@@ -71,7 +71,7 @@ export default function HelpPage() {
             <li><strong>Select All / Deselect All</strong> — Use the buttons in the selection summary to toggle all templates visible in the current filter.</li>
             <li><strong>Browser storage</strong> — Your selections are saved automatically. Close and come back later without losing your work.</li>
             <li><strong>Share via URL</strong> — Use the share button to encode your entire selection into the URL. Send it to teammates.</li>
-            <li><strong>Keyboard shortcuts</strong> — Use <kbd>Ctrl+Shift+F</kbd> to focus search, <kbd>Ctrl+Shift+C</kbd> to copy, <kbd>Ctrl+Shift+D</kbd> to download.</li>
+            <li><strong>Keyboard shortcuts</strong> — Hover over the &quot;Shortcuts&quot; button in the toolbar to see available shortcuts. Or use <kbd>Ctrl+Shift+F</kbd> to focus search, <kbd>Ctrl+Shift+C</kbd> to copy, <kbd>Ctrl+Shift+D</kbd> to download.</li>
             <li><strong>Dark mode</strong> — The tool follows your system preference. Use the theme toggle to switch manually.</li>
           </ul>
         </section>
