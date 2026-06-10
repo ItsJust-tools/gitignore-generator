@@ -734,6 +734,23 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     '.gradletasknamecache',
     'generated/',
   ],
+
+  // Package Managers
+  pnpm: [
+    '# pnpm',
+    '.pnpm-store/',
+    'pnpm-debug.log*',
+    'pnpm-lock.yaml',
+  ],
+
+  // Testing Frameworks
+  playwright: [
+    '# Playwright',
+    '/test-results/',
+    '/playwright-report/',
+    '/blob-report/',
+    '/playwright/.cache/',
+  ],
 };
 
 /**

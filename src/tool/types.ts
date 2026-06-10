@@ -56,7 +56,9 @@ export type GitignoreTemplate =
   | 'deno'
   | 'bun'
   | 'solidjs'
-  | 'gradle';
+  | 'gradle'
+  | 'pnpm'
+  | 'playwright';
 
 export type VisibilityFilter = 'all' | 'os' | 'ide' | 'language' | 'framework' | 'platform';
 
@@ -162,4 +164,6 @@ export const TEMPLATES: TemplateInfo[] = [
 
   // Build Tools
   { id: 'gradle', label: 'Gradle', description: '.gradle/, build/, local.properties', category: 'platform', icon: '🏗️' },
+  { id: 'pnpm', label: 'pnpm', description: '.pnpm-store, pnpm-lock.yaml, pnpm-debug.log', category: 'platform', icon: '📦' },
+  { id: 'playwright', label: 'Playwright', description: 'test-results/, playwright-report/, blob-report/', category: 'platform', icon: '🎭' },
 ];

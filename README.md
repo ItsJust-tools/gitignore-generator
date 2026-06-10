@@ -84,8 +84,8 @@ VS Code, JetBrains, Vim, Emacs, Visual Studio, Xcode
 ### Operating Systems (3)
 macOS, Windows, Linux
 
-### Platforms & Tools (15)
-Android, Flutter, Deno, Bun, Solid.js, Gradle, Docker, Terraform, Ansible, Unity, Unreal Engine, Godot, Jekyll, Hugo, GitBook
+### Platforms & Tools (17)
+Android, Flutter, Deno, Bun, Solid.js, Gradle, Docker, Terraform, Ansible, Unity, Unreal Engine, Godot, Jekyll, Hugo, GitBook, pnpm, Playwright
 
 ## How It Works
 
