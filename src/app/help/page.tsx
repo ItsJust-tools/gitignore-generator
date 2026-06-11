@@ -57,8 +57,8 @@ export default function HelpPage() {
               <p>macOS, Windows, Linux</p>
             </div>
             <div className="help-category">
-              <h3>🧰 Platforms &amp; Tools (15)</h3>
-              <p>Android, Flutter, Deno, Bun, Solid.js, Gradle, Docker, Terraform, Ansible, Unity, Unreal Engine, Godot, Jekyll, Hugo, GitBook</p>
+              <h3>🧰 Platforms &amp; Tools (18)</h3>
+              <p>Android, Flutter, Deno, Bun, Solid.js, Gradle, Docker, Terraform, Ansible, Unity, Unreal Engine, Godot, Jekyll, Hugo, GitBook, Playwright, pnpm, Biome</p>
             </div>
           </div>
         </section>

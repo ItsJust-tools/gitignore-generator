@@ -20,15 +20,15 @@ export function ToolCanvas({ state, canvasRef, onCopy, onDownload }: ToolCanvasP
   const lineCount = state.outputContent ? state.outputContent.split('\n').length : 0;
 
   /**
-   * Fallback copy handler used when no external onCopy is provided.
-   * The parent ToolClient manages the actual visual feedback via
-   * the 'copied' state field.
+   * Fallback copy handler used only when no external onCopy is provided.
+   * The parent ToolClient manages the real copy logic, toast notifications,
+   * and 'copied' state. This prevents double-clipboard writes when the parent
+   * also writes to the clipboard.
    */
   const handleCopy = useCallback(() => {
     if (state.outputContent && navigator.clipboard) {
       navigator.clipboard.writeText(state.outputContent).catch(() => {
-        // Clipboard write failed silently — parent ToolClient manages toast notifications
-        // and the 'copied' state field for visual feedback.
+        // Silently ignore — parent manages toast if onCopy is provided
       });
     }
   }, [state.outputContent]);

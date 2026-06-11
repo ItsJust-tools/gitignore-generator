@@ -753,6 +753,15 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     '/blob-report/',
     '/playwright/.cache/',
   ],
+
+  // Linters & Formatters
+  biome: [
+    '# Biome',
+    '.biome/',
+    'node_modules/',
+    'dist/',
+    '*.log',
+  ],
 };
 
 /**

@@ -58,7 +58,8 @@ export type GitignoreTemplate =
   | 'solidjs'
   | 'gradle'
   | 'pnpm'
-  | 'playwright';
+  | 'playwright'
+  | 'biome';
 
 export type VisibilityFilter = 'all' | 'os' | 'ide' | 'language' | 'framework' | 'platform';
 
@@ -166,4 +167,7 @@ export const TEMPLATES: TemplateInfo[] = [
   { id: 'gradle', label: 'Gradle', description: '.gradle/, build/, local.properties', category: 'platform', icon: '🏗️' },
   { id: 'pnpm', label: 'pnpm', description: '.pnpm-store, pnpm-lock.yaml, pnpm-debug.log', category: 'platform', icon: '📦' },
   { id: 'playwright', label: 'Playwright', description: 'test-results/, playwright-report/, blob-report/', category: 'platform', icon: '🎭' },
+
+  // Linters & Formatters
+  { id: 'biome', label: 'Biome', description: 'node_modules, dist/, biome.json cache', category: 'platform', icon: '🌿' },
 ];

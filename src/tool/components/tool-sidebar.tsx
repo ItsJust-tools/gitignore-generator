@@ -153,11 +153,33 @@ export function ToolSidebar({
       {/* Template List */}
       <div className="sidebar-section templates-list">
         {filteredTemplates.length === 0 ? (
-          <p className="gitignore-no-results">
-            {state.searchQuery
-              ? `No templates matching "${state.searchQuery}"`
-              : 'No templates in this category'}
-          </p>
+          <div className="gitignore-no-results">
+            <p>
+              {state.searchQuery
+                ? `No templates matching "${state.searchQuery}"`
+                : 'No templates in this category'}
+            </p>
+            {state.searchQuery && (
+              <button
+                type="button"
+                className="clear-search-hint"
+                onClick={() => onSearchChange('')}
+                aria-label="Clear search and show all templates"
+              >
+                Clear search
+              </button>
+            )}
+            {state.visibilityFilter !== 'all' && !state.searchQuery && (
+              <button
+                type="button"
+                className="clear-search-hint"
+                onClick={() => onFilterChange('all')}
+                aria-label="Show all categories"
+              >
+                Show all categories
+              </button>
+            )}
+          </div>
         ) : (
           <div className="template-grid">
             {filteredTemplates.map((template) => (
