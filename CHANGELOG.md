@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Common Stack Combinations table**: Quick-pick template combinations for popular project types (Node.js API, React + Vite, Python + Django, etc.) added to README.
+- **Docker template expansion**: Added `.env` and `*.tgz` to Docker template rules for better coverage of Docker project exclusions.
+
+### Fixed
+
+- **README template count accuracy**: Changed "60+" to "60" to reflect the exact number of available templates.
+- **README heading hierarchy**: Improved structure with clearer section ordering.
+
+### Added
+
 - **Gradle template**: New build tool template for Gradle-based projects (distinct from Java/Android templates).
 
 ### Fixed

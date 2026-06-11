@@ -598,8 +598,10 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
   docker: [
     '# Docker',
     '.docker/',
+    '.env',
     '*.tar',
     '*.tar.gz',
+    '*.tgz',
   ],
   terraform: [
     '# Terraform',

@@ -4,7 +4,7 @@
 [![CI](https://github.com/ItsJust-tools/gitignore-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/ItsJust-tools/gitignore-generator/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Generate `.gitignore` files from **60+ templates** — combine languages, frameworks, IDEs, OS rules, platforms, and custom entries. All client-side, privacy-first, zero dependencies on external services.
+Generate `.gitignore` files from **60 templates** — combine languages, frameworks, IDEs, OS rules, platforms, and custom entries. All client-side, privacy-first, zero dependencies on external services.
 
 **Live at:** [gitignore-generator.itsjust.tools](https://gitignore-generator.itsjust.tools)
 
@@ -25,7 +25,7 @@ Stop searching for the perfect .gitignore or pasting together rules from half-re
 
 ## Features
 
-- **60+ hand-curated templates** — each containing the real rules you actually need
+- **60 hand-curated templates** — each containing the real rules you actually need
 - **Category filters** — browse by Language, Framework, IDE, or OS
 - **Search** — quickly find any template
 - **Multi-select** — combine any number of templates
@@ -96,6 +96,26 @@ Android, Flutter, Deno, Bun, Solid.js, Gradle, Docker, Terraform, Ansible, Unity
 5. **Copy or download** — paste into your project root
 
 Everything runs in your browser. No data is sent to any server.
+
+## Common Stack Combinations
+
+Quick pick combinations for popular project types:
+
+| Project Type | Templates to Select |
+|---|---|
+| **Node.js API** | Node.js + VS Code + macOS/Windows/Linux |
+| **React + Vite** | React + Node.js + VS Code + macOS |
+| **Next.js App** | Next.js + Node.js + VS Code + macOS/Windows |
+| **Python + Django** | Python + Django + VS Code |
+| **Spring Boot API** | Spring Boot + Java + Gradle + JetBrains |
+| **Rust CLI** | Rust + VS Code + macOS/Windows/Linux |
+| **Go Microservice** | Go + Docker + Terraform + VS Code |
+| **Flutter Mobile** | Flutter + Android + Xcode + VS Code + macOS |
+| **Unity Game** | Unity + C# + VS Code + JetBrains + macOS/Windows |
+| **Jekyll Blog** | Jekyll + Ruby + VS Code + macOS |
+| **FastAPI + Docker** | Python + Docker + VS Code + macOS/Windows/Linux |
+| **Terraform Infra** | Terraform + VS Code + JetBrains |
+| **React Native** | React + Node.js + Android + Xcode + macOS |
 
 ## Architecture
 
