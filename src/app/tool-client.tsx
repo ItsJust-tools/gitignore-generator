@@ -113,6 +113,8 @@ export default function ToolClient() {
       return {
         ...prev,
         selectedTemplates: [...new Set([...prev.selectedTemplates, ...allVisibleIds])],
+        outputContent: '',
+        copied: false,
       };
     });
   }, [setToolData]);
@@ -153,6 +155,34 @@ export default function ToolClient() {
     URL.revokeObjectURL(url);
     showToast('.gitignore downloaded', 'success');
   }, [tool.state.data.outputContent, showToast]);
+
+  // Wire up tool-specific keyboard shortcuts: Ctrl+Shift+C (copy), Ctrl+Shift+D (download), Ctrl+Shift+F (focus search)
+  useEffect(() => {
+    function handleToolShortcuts(e: KeyboardEvent) {
+      if (!(e.ctrlKey || e.metaKey) || !e.shiftKey) return;
+      switch (e.key.toLowerCase()) {
+        case 'c': {
+          e.preventDefault();
+          handleCopy();
+          break;
+        }
+        case 'd': {
+          e.preventDefault();
+          handleDownload();
+          break;
+        }
+        case 'f': {
+          e.preventDefault();
+          const searchEl = document.querySelector<HTMLInputElement>('.gitignore-search');
+          searchEl?.focus();
+          searchEl?.select();
+          break;
+        }
+      }
+    }
+    window.addEventListener('keydown', handleToolShortcuts);
+    return () => window.removeEventListener('keydown', handleToolShortcuts);
+  }, [handleCopy, handleDownload]);
 
   // Load shared state from URL
   useEffect(() => {
