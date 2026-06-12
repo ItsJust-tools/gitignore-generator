@@ -155,7 +155,9 @@ export function ToolSidebar({
           {TEMPLATE_CATEGORIES.map((cat, i) => (
             <button
               key={cat.id}
-              ref={(el) => { filterTabRefs.current[i] = el; }}
+              ref={(el) => {
+                filterTabRefs.current[i] = el;
+              }}
               type="button"
               role="tab"
               className={`filter-tab ${state.visibilityFilter === cat.id ? 'active' : ''}`}
@@ -263,7 +265,9 @@ export function ToolSidebar({
             onChange={(e) => onCustomRulesChange(e.target.value)}
             className="gitignore-textarea"
             aria-label="Custom .gitignore rules"
-            placeholder={'Add your own rules here...\ne.g.\nmy-secrets/\n*.local\n!important.config\n# Or a comment explaining a rule\nbuild-output/'}
+            placeholder={
+              'Add your own rules here...\ne.g.\nmy-secrets/\n*.local\n!important.config\n# Or a comment explaining a rule\nbuild-output/'
+            }
             rows={4}
           />
         </div>

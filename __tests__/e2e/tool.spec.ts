@@ -51,7 +51,9 @@ test('generate button works when templates selected', async ({ page }) => {
   expect(text).toContain('#');
 });
 
-test('generate button is disabled when no templates selected and no custom rules', async ({ page }) => {
+test('generate button is disabled when no templates selected and no custom rules', async ({
+  page,
+}) => {
   await page.goto('/');
   await ensureToolbarInteractable(page);
   const generateButton = page.getByRole('button', { name: /Generate .gitignore/i });

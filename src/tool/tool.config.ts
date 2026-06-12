@@ -29,7 +29,11 @@ const toolConfig = {
     {
       title: '.gitignore Generator',
       shortcuts: [
-        { keys: 'Ctrl+Shift+C', label: 'Copy .gitignore', description: 'copy generated content to clipboard' },
+        {
+          keys: 'Ctrl+Shift+C',
+          label: 'Copy .gitignore',
+          description: 'copy generated content to clipboard',
+        },
         { keys: 'Ctrl+Shift+D', label: 'Download', description: 'download .gitignore as a file' },
         { keys: 'Ctrl+Shift+F', label: 'Focus search', description: 'jump to template search' },
       ],

@@ -61,42 +61,48 @@ Open [http://localhost:3000](http://localhost:3000) to see the tool.
 
 ## Scripts
 
-| Command                      | Description                          |
-| ---------------------------- | ------------------------------------ |
-| `npm run dev`                | Start dev server (Turbopack)         |
-| `npm run build`              | Build core package + Next.js         |
-| `npm test`                   | Run Vitest unit tests                |
-| `npm run test:e2e`           | Run Playwright E2E tests             |
-| `npm run lint`               | Run ESLint                           |
-| `npm run format`             | Format with Prettier                 |
+| Command            | Description                  |
+| ------------------ | ---------------------------- |
+| `npm run dev`      | Start dev server (Turbopack) |
+| `npm run build`    | Build core package + Next.js |
+| `npm test`         | Run Vitest unit tests        |
+| `npm run test:e2e` | Run Playwright E2E tests     |
+| `npm run lint`     | Run ESLint                   |
+| `npm run format`   | Format with Prettier         |
 
 ## Template Categories
 
 ### Languages (21)
+
 Node.js, Python, Java, Rust, Go, Ruby, .NET, C, C++, Swift, Kotlin, Scala, Elixir, Haskell, Julia, Lua, Perl, R, MATLAB, Zig, Crystal
 
 ### Frameworks (17)
+
 React, Next.js, Vue, Nuxt, Svelte, Angular, Gatsby, Eleventy, Django, Ruby on Rails, Laravel, Spring Boot, Sass, **Tailwind CSS**, **FastAPI**, **NestJS**, **Remix**
 
 ### IDEs & Editors (6)
+
 VS Code, JetBrains, Vim, Emacs, Visual Studio, Xcode
 
 ### Operating Systems (3)
+
 macOS, Windows, Linux
 
 ### Platforms & Tools (18)
+
 Android, Flutter, Deno, Bun, Solid.js, Gradle, Docker, Terraform, Ansible, Unity, Unreal Engine, Godot, Jekyll, Hugo, GitBook, pnpm, Playwright, Biome
 
 ### Linters & Formatters (3)
+
 Biome, **ESLint**, **Prettier**
 
 ## Keyboard Shortcuts
 
-| Shortcut | Action |
-|---|---|
+| Shortcut       | Action                                 |
+| -------------- | -------------------------------------- |
 | `Ctrl+Shift+C` | Copy generated .gitignore to clipboard |
-| `Ctrl+Shift+D` | Download .gitignore file |
-| `Ctrl+Shift+F` | Focus the template search box |
+| `Ctrl+Shift+D` | Download .gitignore file               |
+| `Ctrl+Shift+F` | Focus the template search box          |
 
 ## How It Works
 
@@ -112,21 +118,21 @@ Everything runs in your browser. No data is sent to any server.
 
 Quick pick combinations for popular project types:
 
-| Project Type | Templates to Select |
-|---|---|
-| **Node.js API** | Node.js + VS Code + macOS/Windows/Linux |
-| **React + Vite** | React + Node.js + VS Code + macOS |
-| **Next.js App** | Next.js + Node.js + VS Code + macOS/Windows |
-| **Python + Django** | Python + Django + VS Code |
-| **Spring Boot API** | Spring Boot + Java + Gradle + JetBrains |
-| **Rust CLI** | Rust + VS Code + macOS/Windows/Linux |
-| **Go Microservice** | Go + Docker + Terraform + VS Code |
-| **Flutter Mobile** | Flutter + Android + Xcode + VS Code + macOS |
-| **Unity Game** | Unity + C# + VS Code + JetBrains + macOS/Windows |
-| **Jekyll Blog** | Jekyll + Ruby + VS Code + macOS |
-| **FastAPI + Docker** | Python + Docker + VS Code + macOS/Windows/Linux |
-| **Terraform Infra** | Terraform + VS Code + JetBrains |
-| **React Native** | React + Node.js + Android + Xcode + macOS |
+| Project Type         | Templates to Select                              |
+| -------------------- | ------------------------------------------------ |
+| **Node.js API**      | Node.js + VS Code + macOS/Windows/Linux          |
+| **React + Vite**     | React + Node.js + VS Code + macOS                |
+| **Next.js App**      | Next.js + Node.js + VS Code + macOS/Windows      |
+| **Python + Django**  | Python + Django + VS Code                        |
+| **Spring Boot API**  | Spring Boot + Java + Gradle + JetBrains          |
+| **Rust CLI**         | Rust + VS Code + macOS/Windows/Linux             |
+| **Go Microservice**  | Go + Docker + Terraform + VS Code                |
+| **Flutter Mobile**   | Flutter + Android + Xcode + VS Code + macOS      |
+| **Unity Game**       | Unity + C# + VS Code + JetBrains + macOS/Windows |
+| **Jekyll Blog**      | Jekyll + Ruby + VS Code + macOS                  |
+| **FastAPI + Docker** | Python + Docker + VS Code + macOS/Windows/Linux  |
+| **Terraform Infra**  | Terraform + VS Code + JetBrains                  |
+| **React Native**     | React + Node.js + Android + Xcode + macOS        |
 
 ## Architecture
 
@@ -176,12 +182,12 @@ src/
 
 ```typescript
 interface GitignoreState {
-  selectedTemplates: GitignoreTemplate[];  // Array of template IDs
-  customRules: string;                     // User-typed custom .gitignore entries
-  outputContent: string;                   // Generated .gitignore body
-  visibilityFilter: VisibilityFilter;      // 'all' | 'language' | 'framework' | 'ide' | 'os' | 'platform'
-  searchQuery: string;                     // Filter text
-  copied: boolean;                         // Clipboard feedback flag
+  selectedTemplates: GitignoreTemplate[]; // Array of template IDs
+  customRules: string; // User-typed custom .gitignore entries
+  outputContent: string; // Generated .gitignore body
+  visibilityFilter: VisibilityFilter; // 'all' | 'language' | 'framework' | 'ide' | 'os' | 'platform'
+  searchQuery: string; // Filter text
+  copied: boolean; // Clipboard feedback flag
 }
 ```
 

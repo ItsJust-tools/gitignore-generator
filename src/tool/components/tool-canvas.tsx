@@ -41,17 +41,21 @@ export function ToolCanvas({ state, canvasRef, onCopy, onDownload }: ToolCanvasP
   }, [state.outputContent]);
 
   return (
-    <div ref={canvasRef} className="gitignore-canvas" role="application" aria-label=".gitignore Generator">
+    <div
+      ref={canvasRef}
+      className="gitignore-canvas"
+      role="application"
+      aria-label=".gitignore Generator"
+    >
       {state.outputContent ? (
         <div className="gitignore-result">
           <div className="gitignore-header">
             <h2 className="gitignore-title">Generated .gitignore</h2>
             <div className="gitignore-stats">
+              <span className="stat-badge">{lineCount} lines</span>
               <span className="stat-badge">
-                {lineCount} lines
-              </span>
-              <span className="stat-badge">
-                {state.selectedTemplates.length} template{state.selectedTemplates.length !== 1 ? 's' : ''}
+                {state.selectedTemplates.length} template
+                {state.selectedTemplates.length !== 1 ? 's' : ''}
               </span>
             </div>
           </div>

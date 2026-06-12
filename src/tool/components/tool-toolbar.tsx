@@ -34,11 +34,7 @@ const KBD_STYLE: React.CSSProperties = {
 export function ToolToolbar() {
   return (
     <div className="gitignore-toolbar">
-      <Link
-        href="/help"
-        className="toolbar-btn toolbar-help-link"
-        aria-label="Open help page"
-      >
+      <Link href="/help" className="toolbar-btn toolbar-help-link" aria-label="Open help page">
         Help
       </Link>
       <div className="toolbar-btn toolbar-shortcuts-trigger">

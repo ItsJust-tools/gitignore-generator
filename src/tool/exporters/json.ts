@@ -2,10 +2,7 @@ import type { ExportOptions, ExportResult } from '@itsjust/core';
 
 export const exporter = {
   format: 'json' as const,
-  async export(
-    el: HTMLElement,
-    options: ExportOptions
-  ): Promise<ExportResult> {
+  async export(el: HTMLElement, options: ExportOptions): Promise<ExportResult> {
     // Read content from a data attribute or the element text
     const content = el.getAttribute('data-content') || el.textContent || '';
     if (!content) {

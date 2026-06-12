@@ -38,7 +38,14 @@ vi.mock('@itsjust/core', () => ({
   ),
   useTool: () => ({
     state: {
-      data: { selectedTemplates: [], customRules: '', outputContent: '', visibilityFilter: 'all', searchQuery: '', copied: false },
+      data: {
+        selectedTemplates: [],
+        customRules: '',
+        outputContent: '',
+        visibilityFilter: 'all',
+        searchQuery: '',
+        copied: false,
+      },
       setData: mockSetData,
       isDirty: false,
       lastSaved: 'just now',
@@ -65,10 +72,15 @@ vi.mock('@/tool', () => ({
     serialize: (state: unknown) => JSON.stringify(state),
     deserialize: () => ({ success: true, data: { text: 'From Shared Url' } }),
   },
-  ToolCanvas: ({ state }: { state: { selectedTemplates: string[] } }) => <div>canvas:{state.selectedTemplates.length}</div>,
+  ToolCanvas: ({ state }: { state: { selectedTemplates: string[] } }) => (
+    <div>canvas:{state.selectedTemplates.length}</div>
+  ),
   ToolToolbar: () => <div>toolbar</div>,
-  ToolSidebar: ({ state }: { state: { selectedTemplates: string[] } }) => <div>sidebar:{state.selectedTemplates.length}</div>,
-  buildGitignore: (templates: string[], rules: string) => `# generated ${templates.join(',')} ${rules}`,
+  ToolSidebar: ({ state }: { state: { selectedTemplates: string[] } }) => (
+    <div>sidebar:{state.selectedTemplates.length}</div>
+  ),
+  buildGitignore: (templates: string[], rules: string) =>
+    `# generated ${templates.join(',')} ${rules}`,
 }));
 
 describe('app client and help page', () => {
