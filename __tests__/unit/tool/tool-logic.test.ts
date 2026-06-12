@@ -234,4 +234,54 @@ describe('buildGitignore with specific templates', () => {
     expect(result).toContain('.solid/');
     expect(result).toContain('dist/');
   });
+
+  it('generates Tailwind CSS output', () => {
+    const result = buildGitignore(['tailwindcss'], '');
+    expect(result).toContain('# Tailwind CSS');
+    expect(result).toContain('.tailwind-cache/');
+  });
+
+  it('generates FastAPI output', () => {
+    const result = buildGitignore(['fastapi'], '');
+    expect(result).toContain('# FastAPI');
+    expect(result).toContain('__pycache__');
+    expect(result).toContain('.venv/');
+  });
+
+  it('generates NestJS output', () => {
+    const result = buildGitignore(['nestjs'], '');
+    expect(result).toContain('# NestJS');
+    expect(result).toContain('.nest/');
+    expect(result).toContain('dist/');
+  });
+
+  it('generates Remix output', () => {
+    const result = buildGitignore(['remix'], '');
+    expect(result).toContain('# Remix');
+    expect(result).toContain('public/build/');
+    expect(result).toContain('build/');
+  });
+
+  it('generates ESLint output', () => {
+    const result = buildGitignore(['eslint'], '');
+    expect(result).toContain('# ESLint');
+    expect(result).toContain('.eslintcache');
+  });
+
+  it('generates Prettier output', () => {
+    const result = buildGitignore(['prettier'], '');
+    expect(result).toContain('# Prettier');
+    expect(result).toContain('.prettiercache');
+  });
+
+  it('generates combined Tailwind + React + ESLint + Prettier stack', () => {
+    const result = buildGitignore(['tailwindcss', 'react', 'eslint', 'prettier'], '');
+    expect(result).toContain('Tailwind CSS');
+    expect(result).toContain('React');
+    expect(result).toContain('ESLint');
+    expect(result).toContain('Prettier');
+    expect(result).toContain('.eslintcache');
+    expect(result).toContain('.prettiercache');
+    expect(result).toContain('.tailwind-cache/');
+  });
 });

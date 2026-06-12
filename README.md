@@ -4,7 +4,7 @@
 [![CI](https://github.com/ItsJust-tools/gitignore-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/ItsJust-tools/gitignore-generator/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Generate `.gitignore` files from **61 templates** — combine languages, frameworks, IDEs, OS rules, platforms, and custom entries. All client-side, privacy-first, zero dependencies on external services.
+Generate `.gitignore` files from **68 templates** — combine languages, frameworks, IDEs, OS rules, platforms, and custom entries. All client-side, privacy-first, zero dependencies on external services.
 
 **Live at:** [gitignore-generator.itsjust.tools](https://gitignore-generator.itsjust.tools)
 
@@ -25,7 +25,7 @@ Stop searching for the perfect .gitignore or pasting together rules from half-re
 
 ## Features
 
-- **61 hand-curated templates** — each containing the real rules you actually need
+- ✅ **68 hand-curated templates** — each containing the real rules you actually need
 - **Category filters** — browse by Language, Framework, IDE, or OS
 - **Search** — quickly find any template
 - **Multi-select** — combine any number of templates
@@ -75,8 +75,8 @@ Open [http://localhost:3000](http://localhost:3000) to see the tool.
 ### Languages (21)
 Node.js, Python, Java, Rust, Go, Ruby, .NET, C, C++, Swift, Kotlin, Scala, Elixir, Haskell, Julia, Lua, Perl, R, MATLAB, Zig, Crystal
 
-### Frameworks (13)
-React, Next.js, Vue, Nuxt, Svelte, Angular, Gatsby, Eleventy, Django, Ruby on Rails, Laravel, Spring Boot, Sass
+### Frameworks (17)
+React, Next.js, Vue, Nuxt, Svelte, Angular, Gatsby, Eleventy, Django, Ruby on Rails, Laravel, Spring Boot, Sass, **Tailwind CSS**, **FastAPI**, **NestJS**, **Remix**
 
 ### IDEs & Editors (6)
 VS Code, JetBrains, Vim, Emacs, Visual Studio, Xcode
@@ -87,8 +87,8 @@ macOS, Windows, Linux
 ### Platforms & Tools (18)
 Android, Flutter, Deno, Bun, Solid.js, Gradle, Docker, Terraform, Ansible, Unity, Unreal Engine, Godot, Jekyll, Hugo, GitBook, pnpm, Playwright, Biome
 
-### Linters & Formatters (1)
-Biome
+### Linters & Formatters (3)
+Biome, **ESLint**, **Prettier**
 
 ## Keyboard Shortcuts
 

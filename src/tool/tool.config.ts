@@ -8,7 +8,7 @@ const toolConfig = {
   name: '.gitignore Generator',
   description:
     'Generate .gitignore files from 60+ templates — combine languages, frameworks, IDEs, and OS rules. All client-side, privacy-first.',
-  version: '1.0.0',
+  version: '1.1.0',
   exportFormats: ['json'],
   features: {
     export: true,

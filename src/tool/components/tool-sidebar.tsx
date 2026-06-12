@@ -4,6 +4,21 @@ import type { GitignoreState, GitignoreTemplate, VisibilityFilter } from '../typ
 import { TEMPLATES, TEMPLATE_CATEGORIES } from '../types';
 import { useCallback, useMemo, useRef } from 'react';
 
+/**
+ * Pre-configured quick pick presets for common project stacks.
+ * Each preset applies a set of templates with a single click.
+ */
+const QUICK_PICKS: { name: string; icon: string; templates: GitignoreTemplate[] }[] = [
+  { name: 'Node.js API', icon: '🟢', templates: ['node', 'vscode', 'macos'] },
+  { name: 'React + Vite', icon: '⚛️', templates: ['react', 'node', 'vscode', 'macos'] },
+  { name: 'Next.js App', icon: '▲', templates: ['nextjs', 'node', 'vscode', 'macos'] },
+  { name: 'Python + Django', icon: '🎸', templates: ['python', 'django', 'vscode'] },
+  { name: 'Rust CLI', icon: '🦀', templates: ['rust', 'vscode', 'macos'] },
+  { name: 'Go Microservice', icon: '🔵', templates: ['go', 'docker', 'vscode'] },
+  { name: 'Flutter Mobile', icon: '💙', templates: ['flutter', 'android', 'vscode', 'macos'] },
+  { name: 'FastAPI + Docker', icon: '⚡', templates: ['fastapi', 'python', 'docker', 'vscode'] },
+];
+
 interface ToolSidebarProps {
   state: GitignoreState;
   onToggleTemplate: (id: GitignoreTemplate) => void;
@@ -81,6 +96,38 @@ export function ToolSidebar({
 
   return (
     <div className="gitignore-sidebar">
+      {/* Quick Pick Presets */}
+      <div className="sidebar-section">
+        <h3>Quick Picks</h3>
+        <div className="quick-picks">
+          {QUICK_PICKS.map((preset) => {
+            const allSelected = preset.templates.every((t) => state.selectedTemplates.includes(t));
+            return (
+              <button
+                key={preset.name}
+                type="button"
+                className={`quick-pick-btn${allSelected ? ' active' : ''}`}
+                onClick={() => {
+                  // Toggle: if all selected, deselect them; otherwise add all
+                  for (const t of preset.templates) {
+                    if (allSelected) {
+                      // If already selected, deselect all of this preset's templates
+                      onToggleTemplate(t);
+                    } else if (!state.selectedTemplates.includes(t)) {
+                      onToggleTemplate(t);
+                    }
+                  }
+                }}
+                aria-label={`${allSelected ? 'Remove' : 'Add'} ${preset.name} stack`}
+              >
+                <span className="quick-pick-icon">{preset.icon}</span>
+                <span className="quick-pick-name">{preset.name}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Filter & Search */}
       <div className="sidebar-section">
         <h3>Templates</h3>

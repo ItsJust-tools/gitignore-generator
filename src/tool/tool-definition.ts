@@ -762,6 +762,88 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     'dist/',
     '*.log',
   ],
+
+  // Frontend / CSS
+  tailwindcss: [
+    '# Tailwind CSS',
+    'node_modules/',
+    'dist/',
+    'build/',
+    '.tailwind-cache/',
+    '*.css.map',
+    '*.log',
+  ],
+
+  // Python Frameworks
+  fastapi: [
+    '# FastAPI',
+    '__pycache__/',
+    '*.py[cod]',
+    '*$py.class',
+    '*.egg-info/',
+    '*.egg',
+    '.venv/',
+    'venv/',
+    'env/',
+    'dist/',
+    'build/',
+    '*.whl',
+    '.pytest_cache/',
+    '.coverage',
+    'coverage/',
+    'htmlcov/',
+    '.mypy_cache/',
+    '.ruff_cache/',
+  ],
+
+  // Node.js Frameworks
+  nestjs: [
+    '# NestJS',
+    'node_modules/',
+    'dist/',
+    'build/',
+    '.nest/',
+    '*.log',
+    'npm-debug.log*',
+    'yarn-debug.log*',
+    'yarn-error.log*',
+    '.env',
+    '.env.*',
+    '!.env.example',
+    'coverage/',
+    '.nyc_output/',
+    '.vscode/',
+    '!vscode/extensions.json',
+  ],
+
+  remix: [
+    '# Remix',
+    'node_modules/',
+    'build/',
+    'public/build/',
+    '.cache/',
+    '*.log',
+    '.env',
+    '.env.*',
+    '!.env.example',
+  ],
+
+  // Linters & Formatters
+  eslint: [
+    '# ESLint',
+    'node_modules/',
+    'dist/',
+    '.eslintcache',
+    '*.log',
+  ],
+
+  prettier: [
+    '# Prettier',
+    'node_modules/',
+    'dist/',
+    '*.log',
+    '.prettiercache',
+  ],
 };
 
 /**

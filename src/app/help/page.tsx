@@ -45,8 +45,8 @@ export default function HelpPage() {
               <p>Node.js, Python, Java, Rust, Go, Ruby, .NET, C, C++, Swift, Kotlin, Scala, Elixir, Haskell, Julia, Lua, Perl, R, MATLAB, Zig, Crystal</p>
             </div>
             <div className="help-category">
-              <h3>🛠️ Frameworks (13)</h3>
-              <p>React, Next.js, Vue, Nuxt, Svelte, Angular, Gatsby, Eleventy, Django, Rails, Laravel, Spring Boot, Sass</p>
+              <h3>🛠️ Frameworks (17)</h3>
+              <p>React, Next.js, Vue, Nuxt, Svelte, Angular, Gatsby, Eleventy, Django, Rails, Laravel, Spring Boot, Sass, <strong>Tailwind CSS</strong>, <strong>FastAPI</strong>, <strong>NestJS</strong>, <strong>Remix</strong></p>
             </div>
             <div className="help-category">
               <h3>✏️ IDEs &amp; Editors (6)</h3>
@@ -57,8 +57,8 @@ export default function HelpPage() {
               <p>macOS, Windows, Linux</p>
             </div>
             <div className="help-category">
-              <h3>🧰 Platforms &amp; Tools (18)</h3>
-              <p>Android, Flutter, Deno, Bun, Solid.js, Gradle, Docker, Terraform, Ansible, Unity, Unreal Engine, Godot, Jekyll, Hugo, GitBook, Playwright, pnpm, Biome</p>
+              <h3>🧰 Platforms &amp; Tools (21)</h3>
+              <p>Android, Flutter, Deno, Bun, Solid.js, Gradle, Docker, Terraform, Ansible, Unity, Unreal Engine, Godot, Jekyll, Hugo, GitBook, Playwright, pnpm, Biome, <strong>ESLint</strong>, <strong>Prettier</strong>, <strong>Tailwind CSS</strong></p>
             </div>
           </div>
         </section>

@@ -59,7 +59,13 @@ export type GitignoreTemplate =
   | 'gradle'
   | 'pnpm'
   | 'playwright'
-  | 'biome';
+  | 'biome'
+  | 'tailwindcss'
+  | 'fastapi'
+  | 'nestjs'
+  | 'remix'
+  | 'eslint'
+  | 'prettier';
 
 export type VisibilityFilter = 'all' | 'os' | 'ide' | 'language' | 'framework' | 'platform';
 
@@ -170,4 +176,12 @@ export const TEMPLATES: TemplateInfo[] = [
 
   // Linters & Formatters
   { id: 'biome', label: 'Biome', description: 'node_modules, dist/, biome.json cache', category: 'platform', icon: '🌿' },
+  { id: 'eslint', label: 'ESLint', description: '.eslintcache, node_modules, dist/', category: 'platform', icon: '📏' },
+  { id: 'prettier', label: 'Prettier', description: 'node_modules, dist/, .prettiercache', category: 'platform', icon: '🎨' },
+
+  // Frameworks
+  { id: 'tailwindcss', label: 'Tailwind CSS', description: 'node_modules, dist/, .tailwind-cache/', category: 'framework', icon: '🌊' },
+  { id: 'fastapi', label: 'FastAPI', description: 'venv, __pycache__, .pyc', category: 'framework', icon: '⚡' },
+  { id: 'nestjs', label: 'NestJS', description: 'node_modules, dist/, .nest/', category: 'framework', icon: '🪺' },
+  { id: 'remix', label: 'Remix', description: 'node_modules, build/, public/build/', category: 'framework', icon: '🧶' },
 ];
