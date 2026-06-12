@@ -311,7 +311,8 @@ export default function ToolClient() {
         )}
       </span>
       <span className="status-slot status-slot-templates">
-        {tool.state.data.selectedTemplates.length} template{tool.state.data.selectedTemplates.length !== 1 ? 's' : ''}
+        {tool.state.data.selectedTemplates.length} template
+        {tool.state.data.selectedTemplates.length !== 1 ? 's' : ''}
       </span>
       <span className="status-slot status-slot-tool-version">Tool v{toolConfig.version}</span>
       <span className="status-slot status-slot-template-version">

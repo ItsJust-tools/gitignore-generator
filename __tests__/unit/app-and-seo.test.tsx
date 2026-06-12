@@ -156,6 +156,8 @@ describe('app and seo', () => {
     );
 
     expect(screen.getByRole('application', { name: '.gitignore Generator' })).toBeInTheDocument();
-    expect(screen.getByText('Select templates below to generate a .gitignore file')).toBeInTheDocument();
+    expect(
+      screen.getByText('Select templates below to generate a .gitignore file')
+    ).toBeInTheDocument();
   });
 });

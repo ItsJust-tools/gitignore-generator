@@ -96,12 +96,7 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     'out/',
     '*.log',
   ],
-  rust: [
-    '# Rust',
-    'target/',
-    '**/*.rs.bk',
-    'Cargo.lock',
-  ],
+  rust: ['# Rust', 'target/', '**/*.rs.bk', 'Cargo.lock'],
   go: [
     '# Go',
     '*.exe',
@@ -242,13 +237,7 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     'docs/build/',
     'docs/site/',
   ],
-  lua: [
-    '# Lua',
-    '*.luac',
-    'build/',
-    '*.rock',
-    '.luarocks/',
-  ],
+  lua: ['# Lua', '*.luac', 'build/', '*.rock', '.luarocks/'],
   perl: [
     '# Perl',
     'blib/',
@@ -336,24 +325,8 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     '*.tsbuildinfo',
     'next-env.d.ts',
   ],
-  vue: [
-    '# Vue',
-    'dist/',
-    'node_modules/',
-    '*.log',
-    '.env.local',
-    '.env.*.local',
-  ],
-  nuxt: [
-    '# Nuxt',
-    '.nuxt/',
-    'dist/',
-    'node_modules/',
-    '.output/',
-    '.env',
-    '.env.*',
-    '*.log',
-  ],
+  vue: ['# Vue', 'dist/', 'node_modules/', '*.log', '.env.local', '.env.*.local'],
+  nuxt: ['# Nuxt', '.nuxt/', 'dist/', 'node_modules/', '.output/', '.env', '.env.*', '*.log'],
   svelte: [
     '# Svelte / SvelteKit',
     'build/',
@@ -364,15 +337,7 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     '.env.*',
     '*.log',
   ],
-  angular: [
-    '# Angular',
-    'dist/',
-    '.angular/',
-    'node_modules/',
-    '*.log',
-    '.env.local',
-    'tmp/',
-  ],
+  angular: ['# Angular', 'dist/', '.angular/', 'node_modules/', '*.log', '.env.local', 'tmp/'],
   gatsby: [
     '# Gatsby',
     'public/',
@@ -382,13 +347,7 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     '.env.development',
     '.env.production',
   ],
-  eleventy: [
-    '# Eleventy',
-    '_site/',
-    '.cache/',
-    'node_modules/',
-    '*.log',
-  ],
+  eleventy: ['# Eleventy', '_site/', '.cache/', 'node_modules/', '*.log'],
   django: [
     '# Django',
     '*.pyc',
@@ -444,13 +403,7 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     '!**/src/main/**/target/',
     '!**/src/test/**/target/',
   ],
-  sass: [
-    '# Sass',
-    '.sass-cache/',
-    '*.css.map',
-    '*.sass.map',
-    '*.scss.map',
-  ],
+  sass: ['# Sass', '.sass-cache/', '*.css.map', '*.sass.map', '*.scss.map'],
 
   // IDEs & Editors
   vscode: [
@@ -473,16 +426,7 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     '.gradle/',
     'build/',
   ],
-  vim: [
-    '# Vim',
-    '*.swp',
-    '*.swo',
-    '*~',
-    '.vim/',
-    '.netrwhist',
-    'Session.vim',
-    '.viminfo',
-  ],
+  vim: ['# Vim', '*.swp', '*.swo', '*~', '.vim/', '.netrwhist', 'Session.vim', '.viminfo'],
   emacs: [
     '# Emacs',
     '*~',
@@ -547,14 +491,7 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     '$RECYCLE.BIN/',
     '*.lnk',
   ],
-  linux: [
-    '# Linux',
-    '*~',
-    '.fuse_hidden*',
-    '.directory',
-    '.Trash-*',
-    '.nfs*',
-  ],
+  linux: ['# Linux', '*~', '.fuse_hidden*', '.directory', '.Trash-*', '.nfs*'],
 
   // Platforms & Tools
   android: [
@@ -595,14 +532,7 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     '.ios/',
     'coverage/',
   ],
-  docker: [
-    '# Docker',
-    '.docker/',
-    '.env',
-    '*.tar',
-    '*.tar.gz',
-    '*.tgz',
-  ],
+  docker: ['# Docker', '.docker/', '.env', '*.tar', '*.tar.gz', '*.tgz'],
   terraform: [
     '# Terraform',
     '.terraform/',
@@ -618,13 +548,7 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     'override.tf.json',
     '_override.tf',
   ],
-  ansible: [
-    '# Ansible',
-    '*.retry',
-    'inventory/',
-    '.ansible/',
-    '*.log',
-  ],
+  ansible: ['# Ansible', '*.retry', 'inventory/', '.ansible/', '*.log'],
   unity: [
     '# Unity',
     'Library/',
@@ -676,35 +600,10 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
     'Gemfile.lock',
     '.sass-cache/',
   ],
-  hugo: [
-    '# Hugo',
-    'public/',
-    'resources/',
-    '.hugo_build.lock',
-  ],
-  gitbook: [
-    '# GitBook',
-    '_book/',
-    'book/',
-    'node_modules/',
-    '*.log',
-  ],
-  deno: [
-    '# Deno',
-    '.deno/',
-    'deno.lock',
-    'lock.json',
-    'dist/',
-    'build/',
-    '*.wasm',
-  ],
-  bun: [
-    '# Bun',
-    'bun.lock',
-    'bun.lockb',
-    'node_modules/',
-    '*.log',
-  ],
+  hugo: ['# Hugo', 'public/', 'resources/', '.hugo_build.lock'],
+  gitbook: ['# GitBook', '_book/', 'book/', 'node_modules/', '*.log'],
+  deno: ['# Deno', '.deno/', 'deno.lock', 'lock.json', 'dist/', 'build/', '*.wasm'],
+  bun: ['# Bun', 'bun.lock', 'bun.lockb', 'node_modules/', '*.log'],
   solidjs: [
     '# Solid.js',
     'node_modules/',
@@ -738,12 +637,7 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
   ],
 
   // Package Managers
-  pnpm: [
-    '# pnpm',
-    '.pnpm-store/',
-    'pnpm-debug.log*',
-    'pnpm-lock.yaml',
-  ],
+  pnpm: ['# pnpm', '.pnpm-store/', 'pnpm-debug.log*', 'pnpm-lock.yaml'],
 
   // Testing Frameworks
   playwright: [
@@ -755,13 +649,7 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
   ],
 
   // Linters & Formatters
-  biome: [
-    '# Biome',
-    '.biome/',
-    'node_modules/',
-    'dist/',
-    '*.log',
-  ],
+  biome: ['# Biome', '.biome/', 'node_modules/', 'dist/', '*.log'],
 
   // Frontend / CSS
   tailwindcss: [
@@ -829,21 +717,9 @@ const TEMPLATE_RULES: Record<GitignoreTemplate, string[]> = {
   ],
 
   // Linters & Formatters
-  eslint: [
-    '# ESLint',
-    'node_modules/',
-    'dist/',
-    '.eslintcache',
-    '*.log',
-  ],
+  eslint: ['# ESLint', 'node_modules/', 'dist/', '.eslintcache', '*.log'],
 
-  prettier: [
-    '# Prettier',
-    'node_modules/',
-    'dist/',
-    '*.log',
-    '.prettiercache',
-  ],
+  prettier: ['# Prettier', 'node_modules/', 'dist/', '*.log', '.prettiercache'],
 };
 
 /**
@@ -882,7 +758,12 @@ function buildGitignore(selectedTemplates: GitignoreTemplate[], customRules: str
   if (customRules.trim()) {
     lines.push('');
     lines.push('# Custom rules');
-    lines.push(...customRules.split('\n').map((l) => l.trim()).filter(Boolean));
+    lines.push(
+      ...customRules
+        .split('\n')
+        .map((l) => l.trim())
+        .filter(Boolean)
+    );
   }
 
   lines.push('');
