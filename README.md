@@ -4,7 +4,7 @@
 [![CI](https://github.com/ItsJust-tools/gitignore-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/ItsJust-tools/gitignore-generator/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Generate `.gitignore` files from **68 templates** — combine languages, frameworks, IDEs, OS rules, platforms, and custom entries. All client-side, privacy-first, zero dependencies on external services.
+Generate `.gitignore` files from **69 templates** — combine languages, frameworks, IDEs, OS rules, platforms, and custom entries. All client-side, privacy-first, zero dependencies on external services.
 
 **Live at:** [gitignore-generator.itsjust.tools](https://gitignore-generator.itsjust.tools)
 
@@ -25,7 +25,7 @@ Stop searching for the perfect .gitignore or pasting together rules from half-re
 
 ## Features
 
-- ✅ **68 hand-curated templates** — each containing the real rules you actually need
+- ✅ **69 hand-curated templates** — each containing the real rules you actually need
 - **Category filters** — browse by Language, Framework, IDE, or OS
 - **Search** — quickly find any template
 - **Multi-select** — combine any number of templates
@@ -103,6 +103,7 @@ Biome, **ESLint**, **Prettier**
 | `Ctrl+Shift+C` | Copy generated .gitignore to clipboard |
 | `Ctrl+Shift+D` | Download .gitignore file               |
 | `Ctrl+Shift+F` | Focus the template search box          |
+| `Ctrl+Enter`   | Generate .gitignore                    |
 
 ## How It Works
 

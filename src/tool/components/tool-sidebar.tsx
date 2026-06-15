@@ -108,13 +108,16 @@ export function ToolSidebar({
                 type="button"
                 className={`quick-pick-btn${allSelected ? ' active' : ''}`}
                 onClick={() => {
-                  // Toggle: if all selected, deselect them; otherwise add all
-                  for (const t of preset.templates) {
-                    if (allSelected) {
-                      // If already selected, deselect all of this preset's templates
+                  // Toggle: if all selected, deselect them; otherwise add only missing ones
+                  if (allSelected) {
+                    for (const t of preset.templates) {
                       onToggleTemplate(t);
-                    } else if (!state.selectedTemplates.includes(t)) {
-                      onToggleTemplate(t);
+                    }
+                  } else {
+                    for (const t of preset.templates) {
+                      if (!state.selectedTemplates.includes(t)) {
+                        onToggleTemplate(t);
+                      }
                     }
                   }
                 }}

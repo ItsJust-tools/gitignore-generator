@@ -156,10 +156,21 @@ export default function ToolClient() {
     showToast('.gitignore downloaded', 'success');
   }, [tool.state.data.outputContent, showToast]);
 
-  // Wire up tool-specific keyboard shortcuts: Ctrl+Shift+C (copy), Ctrl+Shift+D (download), Ctrl+Shift+F (focus search)
+  // Wire up tool-specific keyboard shortcuts: Ctrl+Shift+C (copy), Ctrl+Shift+D (download),
+  // Ctrl+Shift+F (focus search), and Ctrl+Enter (Generate) in the custom rules textarea
   useEffect(() => {
     function handleToolShortcuts(e: KeyboardEvent) {
-      if (!(e.ctrlKey || e.metaKey) || !e.shiftKey) return;
+      if (e.ctrlKey || e.metaKey) {
+        // Ctrl+Enter (or Cmd+Enter) → generate
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          handleGenerate();
+          return;
+        }
+        if (!e.shiftKey) return;
+      } else {
+        return;
+      }
       switch (e.key.toLowerCase()) {
         case 'c': {
           e.preventDefault();
@@ -182,7 +193,7 @@ export default function ToolClient() {
     }
     window.addEventListener('keydown', handleToolShortcuts);
     return () => window.removeEventListener('keydown', handleToolShortcuts);
-  }, [handleCopy, handleDownload]);
+  }, [handleCopy, handleDownload, handleGenerate]);
 
   // Load shared state from URL
   useEffect(() => {

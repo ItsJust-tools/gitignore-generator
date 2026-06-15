@@ -36,6 +36,11 @@ const toolConfig = {
         },
         { keys: 'Ctrl+Shift+D', label: 'Download', description: 'download .gitignore as a file' },
         { keys: 'Ctrl+Shift+F', label: 'Focus search', description: 'jump to template search' },
+        {
+          keys: 'Ctrl+Enter',
+          label: 'Generate',
+          description: 'generate .gitignore from selected templates',
+        },
       ],
     },
   ],
