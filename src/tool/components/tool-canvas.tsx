@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { GitignoreState } from '../types';
 
 interface ToolCanvasProps {
@@ -17,6 +17,7 @@ interface ToolCanvasProps {
  */
 export function ToolCanvas({ state, canvasRef, onCopy, onDownload }: ToolCanvasProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [localCopied, setLocalCopied] = useState(false);
   const lineCount = state.outputContent ? state.outputContent.split('\n').length : 0;
 
   /**
@@ -24,14 +25,26 @@ export function ToolCanvas({ state, canvasRef, onCopy, onDownload }: ToolCanvasP
    * The parent ToolClient manages the real copy logic, toast notifications,
    * and 'copied' state. This prevents double-clipboard writes when the parent
    * also writes to the clipboard.
+   *
+   * When used as a standalone fallback (no parent onCopy), provides local
+   * visual feedback via a brief "Copied!" state.
    */
   const handleCopy = useCallback(() => {
     if (state.outputContent && navigator.clipboard) {
-      navigator.clipboard.writeText(state.outputContent).catch(() => {
-        // Silently ignore — parent manages toast if onCopy is provided
-      });
+      navigator.clipboard.writeText(state.outputContent).then(
+        () => {
+          setLocalCopied(true);
+          setTimeout(() => setLocalCopied(false), 2000);
+        },
+        () => {
+          // Clipboard write failed — silently ignore
+        }
+      );
     }
   }, [state.outputContent]);
+
+  // Determine whether the "copied" visual state is active
+  const isCopied = state.copied || localCopied;
 
   // Auto-select content when it changes
   useEffect(() => {
@@ -78,11 +91,11 @@ export function ToolCanvas({ state, canvasRef, onCopy, onDownload }: ToolCanvasP
           <div className="gitignore-actions">
             <button
               type="button"
-              className={`gitignore-btn gitignore-btn-primary${state.copied ? ' copied' : ''}`}
+              className={`gitignore-btn gitignore-btn-primary${isCopied ? ' copied' : ''}`}
               onClick={onCopy || handleCopy}
-              aria-label={state.copied ? 'Copied to clipboard' : 'Copy .gitignore to clipboard'}
+              aria-label={isCopied ? 'Copied to clipboard' : 'Copy .gitignore to clipboard'}
             >
-              {state.copied ? 'Copied!' : 'Copy to Clipboard'}
+              {isCopied ? 'Copied!' : 'Copy to Clipboard'}
             </button>
             <button
               type="button"
