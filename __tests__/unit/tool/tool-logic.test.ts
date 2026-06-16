@@ -20,6 +20,21 @@ describe('.gitignore Generator logic', () => {
     expect(state.data.outputContent).toBe('');
   });
 
+  it('batch removes templates in a single operation', () => {
+    const state: GitignoreState = {
+      ...defaultState,
+      selectedTemplates: ['node', 'python', 'vscode', 'macos'],
+    };
+    const removeSet = new Set<GitignoreTemplate>(['node', 'vscode']);
+    const result = {
+      ...state,
+      selectedTemplates: state.selectedTemplates.filter((t) => !removeSet.has(t)),
+      outputContent: '',
+      copied: false,
+    };
+    expect(result.selectedTemplates).toEqual(['python', 'macos']);
+  });
+
   it('builds .gitignore with a single template', () => {
     const result = buildGitignore(['node'], '');
     expect(result).toContain('# Node.js');

@@ -798,6 +798,26 @@ export const gitignoreTool: Tool<GitignoreState> = {
       format: 'json',
       loader: () => import('./exporters/json'),
     },
+    {
+      format: 'txt',
+      loader: () => import('./exporters/txt'),
+    },
+    {
+      format: 'png',
+      loader: () => import('./exporters/png'),
+    },
+    {
+      format: 'jpeg',
+      loader: () => import('./exporters/jpeg'),
+    },
+    {
+      format: 'webp',
+      loader: () => import('./exporters/webp'),
+    },
+    {
+      format: 'pdf',
+      loader: () => import('./exporters/pdf'),
+    },
   ],
 };
 

@@ -22,6 +22,7 @@ const QUICK_PICKS: { name: string; icon: string; templates: GitignoreTemplate[] 
 interface ToolSidebarProps {
   state: GitignoreState;
   onToggleTemplate: (id: GitignoreTemplate) => void;
+  onBatchRemove?: (ids: GitignoreTemplate[]) => void;
   onCustomRulesChange: (rules: string) => void;
   onFilterChange: (filter: VisibilityFilter) => void;
   onSearchChange: (query: string) => void;
@@ -34,6 +35,7 @@ interface ToolSidebarProps {
 export function ToolSidebar({
   state,
   onToggleTemplate,
+  onBatchRemove,
   onCustomRulesChange,
   onFilterChange,
   onSearchChange,
@@ -108,11 +110,12 @@ export function ToolSidebar({
                 type="button"
                 className={`quick-pick-btn${allSelected ? ' active' : ''}`}
                 onClick={() => {
-                  // Toggle: if all selected, deselect them; otherwise add only missing ones
+                  // Toggle: if all selected, deselect them all in one batch;
+                  // otherwise add only the missing ones.
                   if (allSelected) {
-                    for (const t of preset.templates) {
-                      onToggleTemplate(t);
-                    }
+                    onBatchRemove
+                      ? onBatchRemove(preset.templates)
+                      : preset.templates.forEach((t) => onToggleTemplate(t));
                   } else {
                     for (const t of preset.templates) {
                       if (!state.selectedTemplates.includes(t)) {

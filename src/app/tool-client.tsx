@@ -123,6 +123,26 @@ export default function ToolClient() {
     setToolData((prev) => ({ ...prev, selectedTemplates: [], outputContent: '', copied: false }));
   }, [setToolData]);
 
+  /**
+   * Remove a batch of template IDs from the selection in a single state update.
+   * Used by Quick Pick preset toggling for better performance (avoids N re-renders
+   * when deselecting a multi-template preset).
+   */
+  const handleBatchRemoveTemplates = useCallback(
+    (ids: GitignoreTemplate[]) => {
+      setToolData((prev) => {
+        const removeSet = new Set(ids);
+        return {
+          ...prev,
+          selectedTemplates: prev.selectedTemplates.filter((t) => !removeSet.has(t)),
+          outputContent: '',
+          copied: false,
+        };
+      });
+    },
+    [setToolData]
+  );
+
   const handleCopy = useCallback(() => {
     const content = tool.state.data.outputContent;
     if (content && navigator.clipboard) {
@@ -286,6 +306,7 @@ export default function ToolClient() {
     <ToolSidebar
       state={tool.state.data}
       onToggleTemplate={handleToggleTemplate}
+      onBatchRemove={handleBatchRemoveTemplates}
       onCustomRulesChange={handleCustomRulesChange}
       onFilterChange={handleFilterChange}
       onSearchChange={handleSearchChange}

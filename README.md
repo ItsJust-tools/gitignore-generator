@@ -29,10 +29,11 @@ Stop searching for the perfect .gitignore or pasting together rules from half-re
 - **Category filters** — browse by Language, Framework, IDE, or OS
 - **Search** — quickly find any template
 - **Multi-select** — combine any number of templates
+- **Quick Picks** — one-click presets for common project stacks (Node.js API, React + Vite, etc.)
 - **Custom rules** — add your own `.gitignore` entries
 - **Copy to clipboard** with visual feedback
 - **Download** as `.gitignore` file
-- **Export** as `.json` (structured) or `.txt` (plain text)
+- **Export** as `.gitignore.txt` **`.json`** **`.png`** **`.jpg`** **`.webp`** or **`.pdf`**
 - **Share via URL** — encode your full selection into the URL
 - **Dark mode** — automatic system preference detection + manual toggle
 - **Export to PNG/JPEG/WebP/PDF** for screenshots and documentation
