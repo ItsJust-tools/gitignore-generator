@@ -8,6 +8,7 @@ import ErrorPage from '@/app/error';
 import NotFound from '@/app/not-found';
 import { JsonLd } from '@/app/json-ld';
 import ToolPage from '@/app/page';
+import RootLayout from '@/app/layout';
 import { cn } from '@/lib/utils';
 import { generateJsonLd, generateToolMetadata } from '@/lib/seo';
 import toolConfig from '@/tool/tool.config';
@@ -18,6 +19,10 @@ import { ToolSidebar } from '@/tool/components/tool-sidebar';
 import { ToolToolbar } from '@/tool/components/tool-toolbar';
 import type { GitignoreState } from '@/tool/types';
 import { TEMPLATES } from '@/tool/types';
+
+vi.mock('next/font/google', () => ({
+  Geist: () => ({ variable: '--font-geist-sans' }),
+}));
 
 vi.mock('next/link', () => ({
   default: ({ href, children, ...props }: { href: string; children: ReactNode }) => (
@@ -159,5 +164,31 @@ describe('app and seo', () => {
     expect(
       screen.getByText('Select templates below to generate a .gitignore file')
     ).toBeInTheDocument();
+  });
+
+  it('renders skip to content link in layout', () => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+
+    const { container } = render(
+      <RootLayout>
+        <div>Content</div>
+      </RootLayout>
+    );
+    const skipLink = container.querySelector('a.skip-nav');
+    expect(skipLink).toBeInTheDocument();
+    expect(skipLink).toHaveAttribute('href', '#main-content');
+    expect(skipLink).toHaveTextContent('Skip to content');
   });
 });

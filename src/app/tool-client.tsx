@@ -318,12 +318,14 @@ export default function ToolClient() {
   );
 
   const canvasContent = (
-    <ToolCanvas
-      state={tool.state.data}
-      canvasRef={canvasRef}
-      onCopy={handleCopy}
-      onDownload={handleDownload}
-    />
+    <div id="main-content" tabIndex={-1} className="outline-none">
+      <ToolCanvas
+        state={tool.state.data}
+        canvasRef={canvasRef}
+        onCopy={handleCopy}
+        onDownload={handleDownload}
+      />
+    </div>
   );
 
   const statusBarContent = (
