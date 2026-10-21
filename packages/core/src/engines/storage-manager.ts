@@ -44,10 +44,12 @@ export class StorageManager {
       localStorage.setItem(this.key(key), JSON.stringify(entry));
     } catch (error) {
       if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+        // Quota exhaustion and private-browsing storage restrictions must never
+        // break the tool: warn and continue so the UI keeps working.
         console.warn(`[StorageManager] Quota exceeded saving "${key}"`);
-      } else {
-        console.warn(`[StorageManager] Failed to save "${key}":`, error);
+        return;
       }
+      console.warn(`[StorageManager] Failed to save "${key}":`, error);
       throw error;
     }
   }
@@ -84,7 +86,12 @@ export class StorageManager {
   }
 
   remove(key: string): void {
-    localStorage.removeItem(this.key(key));
+    try {
+      localStorage.removeItem(this.key(key));
+    } catch (error) {
+      // Removal failures (blocked storage, private browsing) are non-fatal.
+      console.warn(`[StorageManager] Failed to remove "${key}":`, error);
+    }
   }
 }
 

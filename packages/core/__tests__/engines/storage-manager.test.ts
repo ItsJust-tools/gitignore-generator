@@ -40,14 +40,28 @@ describe('StorageManager', () => {
     expect(manager.load<number[]>('array')).toEqual([1, 2, 3]);
   });
 
-  it('throws QuotaExceededError and logs warning', async () => {
+  it('handles QuotaExceededError gracefully and logs warning', async () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new DOMException('Quota exceeded', 'QuotaExceededError');
     });
 
-    await expect(manager.save('overflow', 'x'.repeat(1024))).rejects.toThrow();
+    await expect(manager.save('overflow', 'x'.repeat(1024))).resolves.toBeUndefined();
     expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Quota exceeded'));
+    warnSpy.mockRestore();
+  });
+
+  it('logs and swallows removal failures', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
+      throw new DOMException('Storage blocked', 'SecurityError');
+    });
+
+    expect(() => manager.remove('blocked-remove')).not.toThrow();
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Failed to remove'),
+      expect.anything()
+    );
     warnSpy.mockRestore();
   });
 
