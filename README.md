@@ -140,7 +140,7 @@ Quick pick combinations for popular project types:
 
 This tool follows the ItsJust Template architecture with Next.js App Router:
 
-```
+```text
 src/
 ├── app/                    # Next.js routes, layout, and metadata
 │   ├── layout.tsx          # Root layout with theme provider

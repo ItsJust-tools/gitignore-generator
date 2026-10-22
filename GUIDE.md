@@ -457,19 +457,33 @@ test('canvas renders', () => {
 
 ### E2E tests
 
-Playwright tests live in `__tests__/e2e/`:
+Playwright tests live in `__tests__/e2e/`. Shared helpers in `utils.ts` open the
+sidebar, select templates, generate output, and read persisted state, so a spec
+stays focused on the behaviour under test:
 
 ```ts
-// __tests__/e2e/tool.spec.ts
 import { test, expect } from '@playwright/test';
+import { generate, gotoTool, selectTemplate } from './utils';
 
-test('exports json', async ({ page }) => {
-  await page.goto('/');
-  await page.click('text=Export');
-  await page.click('text=JSON Data');
-  // assert download
+test('keeps selections after reload', async ({ page }) => {
+  await gotoTool(page);
+  await selectTemplate(page, 'Node.js');
+  await generate(page);
+  await page.reload();
+  await expect(page.locator('.gitignore-output')).toHaveValue(/node_modules\//);
 });
 ```
+
+Current coverage:
+
+| Spec                    | Covers                                                             |
+| ----------------------- | ------------------------------------------------------------------ |
+| `tool.spec.ts`          | Template selection, filtering, search, presets, clear, layout, SEO |
+| `persistence.spec.ts`   | State and undo history across reload                               |
+| `keyboard.spec.ts`      | `Ctrl+Z`/`Ctrl+Y`, `Ctrl+S`, `Ctrl+B`, tool shortcuts, overlay     |
+| `export.spec.ts`        | Export dropdown, JSON/TXT payloads, PNG blob, share URL round-trip |
+| `theme.spec.ts`         | Dark/light and contrast persistence, pre-hydration theme           |
+| `drag-and-drop.spec.ts` | Valid import, corrupt payload, unsupported type, size limit        |
 
 ---
 

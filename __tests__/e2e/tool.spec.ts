@@ -1,290 +1,214 @@
 import { test, expect } from '@playwright/test';
+import {
+  closeSidebar,
+  generate,
+  gotoTool,
+  isMobileProject,
+  openSidebar,
+  selectTemplate,
+} from './utils';
 
-async function closeBackdropIfOpen(page: import('@playwright/test').Page) {
-  const backdrop = page.locator('.sidebar-backdrop');
-  for (let i = 0; i < 3; i++) {
-    const visible = await backdrop.isVisible().catch(() => false);
-    if (!visible) return;
-    await backdrop.evaluate((el) => (el as HTMLElement).click());
-    await page.waitForTimeout(100);
-  }
-}
+test.describe('core tool workflows', () => {
+  test('tool loads with correct title', async ({ page }) => {
+    await page.goto('/');
+    await expect(page).toHaveTitle(/\.gitignore Generator/);
+  });
 
-async function ensureToolbarInteractable(page: import('@playwright/test').Page) {
-  await closeBackdropIfOpen(page);
-  const backdrop = page.locator('.sidebar-backdrop');
-  if (await backdrop.isVisible().catch(() => false)) {
-    await page.keyboard.press('Control+b');
-    await expect(backdrop).toBeHidden();
-  }
-}
+  test('templates are visible and selectable', async ({ page }) => {
+    await gotoTool(page);
+    await selectTemplate(page, 'Node.js');
+    await expect(page.locator('.template-card.selected')).toHaveCount(1);
+  });
 
-test('tool loads with correct title', async ({ page }) => {
-  await page.goto('/');
-  const title = await page.title();
-  expect(title).toContain('.gitignore Generator');
-});
+  test('selecting a template deselects it on a second click', async ({ page }) => {
+    await gotoTool(page);
+    await selectTemplate(page, 'Node.js');
+    await page.locator('.template-card').filter({ hasText: 'Node.js' }).first().click();
+    await expect(page.locator('.template-card.selected')).toHaveCount(0);
+  });
 
-test('templates are visible and selectable', async ({ page }) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-  const templateCard = page.locator('.template-card').first();
-  await expect(templateCard).toBeVisible();
-  await templateCard.click();
-  await expect(templateCard).toHaveClass(/selected/);
-});
+  test('generate button works when templates selected', async ({ page }) => {
+    await gotoTool(page);
+    await selectTemplate(page, 'Node.js');
+    const output = await generate(page);
+    const text = await output.inputValue();
+    expect(text).toContain('# Node.js');
+    expect(text).toContain('node_modules/');
+  });
 
-test('generate button works when templates selected', async ({ page }) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-  const templateCard = page.locator('.template-card').first();
-  await templateCard.click();
+  test('generate button is disabled when no templates selected and no custom rules', async ({
+    page,
+  }) => {
+    await gotoTool(page);
+    await expect(page.getByRole('button', { name: /Generate .gitignore/i })).toBeDisabled();
+  });
 
-  const generateButton = page.getByRole('button', { name: /Generate .gitignore/i });
-  await expect(generateButton).toBeEnabled();
-  await generateButton.click();
+  test('generate button enables from custom rules alone', async ({ page }) => {
+    await gotoTool(page);
+    await page.locator('.gitignore-textarea').fill('my-secrets/');
+    const generateButton = page.getByRole('button', { name: /Generate .gitignore/i });
+    await expect(generateButton).toBeEnabled();
+    await generateButton.click();
+    await expect(page.locator('.gitignore-output')).toHaveValue(/my-secrets\//);
+  });
 
-  const gitignoreOutput = page.locator('.gitignore-output');
-  await expect(gitignoreOutput).toBeVisible();
-  const text = await gitignoreOutput.inputValue();
-  expect(text.length).toBeGreaterThan(0);
-  expect(text).toContain('#');
-});
+  test('custom rules textarea accepts input', async ({ page }) => {
+    await gotoTool(page);
+    const textarea = page.locator('.gitignore-textarea');
+    await textarea.fill('my-local-config/\n*.secret');
+    await expect(textarea).toHaveValue('my-local-config/\n*.secret');
+  });
 
-test('generate button is disabled when no templates selected and no custom rules', async ({
-  page,
-}) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-  const generateButton = page.getByRole('button', { name: /Generate .gitignore/i });
-  await expect(generateButton).toBeDisabled();
-});
+  test('filter tabs change template visibility', async ({ page }) => {
+    await gotoTool(page);
+    await page.getByRole('tab', { name: /Languages/i }).click();
+    await expect(page.locator('.template-card').filter({ hasText: 'Node.js' })).toBeVisible();
+    await expect(page.locator('.template-card').filter({ hasText: 'macOS' })).toHaveCount(0);
+  });
 
-test('custom rules textarea accepts input', async ({ page }) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-  const textarea = page.locator('.gitignore-textarea');
-  await textarea.fill('my-local-config/\n*.secret');
-  await expect(textarea).toHaveValue('my-local-config/\n*.secret');
-});
+  test('filter tabs support keyboard navigation', async ({ page }) => {
+    await gotoTool(page);
+    const allTab = page.getByRole('tab', { name: /All/i });
+    await allTab.focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(page.getByRole('tab', { name: /Languages/i })).toBeFocused();
+    await page.keyboard.press('End');
+    await expect(page.getByRole('tab').last()).toBeFocused();
+  });
 
-test('filter tabs change template visibility', async ({ page }) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-  const languageTab = page.getByRole('tab', { name: /Languages/i });
-  await languageTab.click();
-  const nodeTemplate = page.locator('.template-card').filter({ hasText: 'Node.js' });
-  await expect(nodeTemplate).toBeVisible();
-  const macosTemplate = page.locator('.template-card').filter({ hasText: 'macOS' });
-  await expect(macosTemplate).toHaveCount(0);
-});
+  test('search filters templates and can be cleared', async ({ page }) => {
+    await gotoTool(page);
+    const search = page.getByRole('searchbox', { name: /Search templates/i });
+    await search.fill('Rust');
+    await expect(page.locator('.template-card').filter({ hasText: 'Rust' })).toBeVisible();
+    await expect(page.locator('.template-card').filter({ hasText: 'Node.js' })).toHaveCount(0);
 
-test('export dropdown opens and shows JSON format', async ({ page }, testInfo) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-  // First generate some content
-  const templateCard = page.locator('.template-card').first();
-  await templateCard.click();
-  await page.getByRole('button', { name: /Generate .gitignore/i }).click();
+    await page.getByRole('button', { name: /Clear search/i }).click();
+    await expect(search).toHaveValue('');
+    await expect(page.locator('.template-card').filter({ hasText: 'Node.js' })).toBeVisible();
+  });
 
-  const exportButton = page.getByRole('button', { name: /export/i });
-  await exportButton.click({ force: true });
-  if (testInfo.project.name.includes('Mobile')) {
-    await expect(exportButton).toBeVisible();
-    return;
-  }
-  const menu = page.getByRole('listbox');
-  await expect(menu).toBeVisible();
-  await expect(page.getByRole('option', { name: /JSON/ })).toBeVisible();
-  await page.click('body');
-  await expect(menu).not.toBeVisible();
-});
+  test('no-results state is shown for an unmatched search', async ({ page }) => {
+    await gotoTool(page);
+    await page.getByRole('searchbox', { name: /Search templates/i }).fill('zzz-not-a-template');
+    await expect(page.getByText(/No templates matching/)).toBeVisible();
+    await page.getByRole('button', { name: /Clear search and show all/i }).click();
+    await expect(page.getByText(/No templates matching/)).toHaveCount(0);
+  });
 
-test('sidebar toggle button works', async ({ page }) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-  const sidebarToggle = page.locator('.toolbar-btn-sidebar');
-  const sidebar = page.locator('.tool-shell-sidebar');
-  const mobile =
-    (await page.viewportSize())?.width !== undefined && (await page.viewportSize())!.width <= 768;
-  const isCollapsed = await sidebar.evaluate((el) => el.classList.contains('collapsed'));
-  if (isCollapsed) {
-    await sidebarToggle.click();
-    await expect(sidebar).toHaveClass(/open/);
+  test('quick pick preset selects a stack and toggles it off', async ({ page }) => {
+    await gotoTool(page);
+    const preset = page.getByRole('button', { name: /Add Node\.js API stack/i });
+    await preset.click();
+    await expect(page.locator('.template-card.selected')).toHaveCount(3);
+
+    await page.getByRole('button', { name: /Remove Node\.js API stack/i }).click();
+    await expect(page.locator('.template-card.selected')).toHaveCount(0);
+  });
+
+  test('select all visible and deselect all update the selection', async ({ page }) => {
+    await gotoTool(page);
+    await selectTemplate(page, 'Node.js');
+    await page.getByRole('button', { name: /Select all visible/i }).click();
+    const total = await page.locator('.template-card').count();
+    await expect(page.locator('.template-card.selected')).toHaveCount(total);
+
+    await page.getByRole('button', { name: /Deselect all templates/i }).click();
+    await expect(page.locator('.template-card.selected')).toHaveCount(0);
+  });
+
+  test('clear all button resets everything', async ({ page }) => {
+    await gotoTool(page);
+    await selectTemplate(page, 'Node.js');
+    await generate(page);
+
+    await page.getByRole('button', { name: /Clear all selections/i }).click();
+
+    await expect(page.locator('.gitignore-output')).toHaveCount(0);
+    await expect(page.getByText(/Select templates below/)).toBeVisible();
+    await expect(page.locator('.template-card.selected')).toHaveCount(0);
+    await expect(page.locator('.gitignore-textarea')).toHaveValue('');
+  });
+
+  test('sidebar toggle button works', async ({ page }, testInfo) => {
+    await page.goto('/');
+    const sidebar = page.locator('.tool-shell-sidebar');
+    const mobile = isMobileProject(testInfo.project.name);
+
     if (mobile) {
-      await page.locator('.sidebar-backdrop').click();
-    } else {
-      await sidebarToggle.click();
+      await expect(sidebar).toHaveClass(/collapsed/);
+      await page.locator('[data-sidebar-toggle]').click();
+      await expect(sidebar).toHaveClass(/open/);
+      await expect(page.locator('.sidebar-backdrop')).toBeVisible();
+      await closeSidebar(page);
+      return;
     }
+
+    await expect(sidebar).toHaveClass(/open/);
+    await page.locator('[data-sidebar-toggle]').click();
     await expect(sidebar).toHaveClass(/collapsed/);
-    return;
-  }
-  await expect(sidebar).toHaveClass(/open/);
-  if (mobile) {
-    await page.locator('.sidebar-backdrop').click();
-  } else {
-    await sidebarToggle.click();
-  }
-  await expect(sidebar).toHaveClass(/collapsed/);
+    await openSidebar(page);
+    await expect(sidebar).toHaveClass(/open/);
+  });
+
+  test('mobile sidebar backdrop closes sidebar', async ({ page }, testInfo) => {
+    test.skip(!isMobileProject(testInfo.project.name), 'Mobile-only behaviour');
+    await page.goto('/');
+
+    const sidebar = page.locator('.tool-shell-sidebar');
+    await page.locator('[data-sidebar-toggle]').click();
+    await expect(sidebar).toHaveClass(/open/);
+
+    // Click the top edge of the backdrop: the sheet covers the lower 70vh.
+    await page.locator('.sidebar-backdrop').click({ position: { x: 5, y: 5 } });
+    await expect(sidebar).toHaveClass(/collapsed/);
+  });
+
+  test('404 page works', async ({ page }) => {
+    const response = await page.goto('/this-page-does-not-exist');
+    expect(response?.status()).toBe(404);
+    expect(response?.headers()['content-type'] ?? '').toContain('text/html');
+    await expect(page.getByRole('heading', { name: 'Page not found' })).toBeVisible();
+  });
 });
 
-test('dark mode toggle works', async ({ page }) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-  const themeButton = page.getByRole('button', { name: /Switch to dark mode/i });
-  if (await themeButton.isVisible()) {
-    await themeButton.click();
-    const html = page.locator('html');
-    await expect(html).toHaveAttribute('data-theme', 'dark');
+test.describe('SEO and metadata', () => {
+  test('SEO meta tags are present', async ({ page }) => {
+    await page.goto('/');
+    expect(await page.title()).toBeTruthy();
+    expect(await page.getAttribute('meta[name="description"]', 'content')).toBeTruthy();
+    expect(await page.getAttribute('meta[property="og:title"]', 'content')).toBeTruthy();
+    expect(await page.getAttribute('meta[property="og:image"]', 'content')).toBeTruthy();
+    expect(await page.getAttribute('link[rel="canonical"]', 'href')).toBeTruthy();
+  });
 
-    const lightButton = page.getByRole('button', { name: /Switch to light mode/i });
-    await lightButton.click();
-    await expect(html).toHaveAttribute('data-theme', 'light');
-  }
-});
+  test('JSON-LD structured data is present', async ({ page }) => {
+    await page.goto('/');
+    const content = await page.locator('script[type="application/ld+json"]').first().textContent();
+    const parsed = JSON.parse(content!);
+    expect(parsed['@type']).toBe('WebApplication');
+    expect(parsed.name).toBeTruthy();
+    expect(parsed.offers.price).toBe('0');
+  });
 
-test('SEO meta tags are present', async ({ page }) => {
-  await page.goto('/');
+  test('sitemap.xml is accessible', async ({ page }) => {
+    const response = await page.goto('/sitemap.xml');
+    expect(response?.ok()).toBe(true);
+    expect(await response?.text()).toContain('urlset');
+  });
 
-  const title = await page.title();
-  expect(title).toBeTruthy();
+  test('robots.txt is accessible', async ({ page }) => {
+    const response = await page.goto('/robots.txt');
+    expect(response?.ok()).toBe(true);
+    expect(await response?.text()).toMatch(/User-[Aa]gent/);
+  });
 
-  const description = await page.getAttribute('meta[name="description"]', 'content');
-  expect(description).toBeTruthy();
-
-  const ogTitle = await page.getAttribute('meta[property="og:title"]', 'content');
-  expect(ogTitle).toBeTruthy();
-
-  const ogImage = await page.getAttribute('meta[property="og:image"]', 'content');
-  expect(ogImage).toBeTruthy();
-
-  const canonical = await page.getAttribute('link[rel="canonical"]', 'href');
-  expect(canonical).toBeTruthy();
-});
-
-test('JSON-LD structured data is present', async ({ page }) => {
-  await page.goto('/');
-  const jsonLd = page.locator('script[type="application/ld+json"]').first();
-  const content = await jsonLd.textContent();
-  const parsed = JSON.parse(content!);
-  expect(parsed['@type']).toBe('WebApplication');
-  expect(parsed.name).toBeTruthy();
-  expect(parsed.offers.price).toBe('0');
-});
-
-test('sitemap.xml is accessible', async ({ page }) => {
-  const response = await page.goto('/sitemap.xml');
-  expect(response?.ok()).toBe(true);
-  const content = await response?.text();
-  expect(content).toContain('urlset');
-});
-
-test('robots.txt is accessible', async ({ page }) => {
-  const response = await page.goto('/robots.txt');
-  expect(response?.ok()).toBe(true);
-  const content = await response?.text();
-  expect(content).toMatch(/User-[Aa]gent/);
-});
-
-test('keyboard shortcuts overlay opens and closes', async ({ page, browserName }, _testInfo) => {
-  if (browserName !== 'chromium') return;
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-  if (_testInfo.project.name.includes('Mobile')) {
-    await expect(page.getByRole('button', { name: /keyboard shortcuts/i })).toBeVisible();
-    return;
-  }
-  await page.getByRole('button', { name: /keyboard shortcuts/i }).click({ force: true });
-  await expect(page.getByRole('dialog')).toBeVisible();
-  await page.keyboard.press('Escape');
-  await expect(page.getByRole('dialog')).not.toBeVisible();
-});
-
-test('copy .gitignore to clipboard', async ({ page }) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-  // Select node template and generate
-  await page.locator('.template-card').filter({ hasText: 'Node.js' }).click();
-  await page.getByRole('button', { name: /Generate .gitignore/i }).click();
-
-  // Click copy button
-  const copyButton = page.getByRole('button', { name: /Copy .gitignore/i });
-  await expect(copyButton).toBeVisible();
-  await copyButton.click();
-  await expect(page.getByText('Copied!')).toBeVisible();
-});
-
-test('download .gitignore file', async ({ page }) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-  // Select node template and generate
-  await page.locator('.template-card').filter({ hasText: 'Node.js' }).click();
-  await page.getByRole('button', { name: /Generate .gitignore/i }).click();
-
-  // Click download button
-  const downloadButton = page.getByRole('button', { name: /Download/i });
-  await expect(downloadButton).toBeVisible();
-  const [download] = await Promise.all([page.waitForEvent('download'), downloadButton.click()]);
-  expect(download.suggestedFilename()).toMatch(/\.gitignore/);
-});
-
-test('export json download triggers', async ({ page }) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-  // First generate some content
-  await page.locator('.template-card').filter({ hasText: 'Node.js' }).click();
-  await page.getByRole('button', { name: /Generate .gitignore/i }).click();
-
-  const exportButton = page.getByRole('button', { name: /export/i });
-  await exportButton.click({ force: true });
-
-  const jsonOption = page.getByRole('option', { name: /JSON/ });
-  const [download] = await Promise.all([page.waitForEvent('download'), jsonOption.click()]);
-  expect(download.suggestedFilename()).toMatch(/\.json$/);
-});
-
-test('clear all button resets everything', async ({ page }) => {
-  await page.goto('/');
-  await ensureToolbarInteractable(page);
-  // Generate some content
-  await page.locator('.template-card').first().click();
-  await page.getByRole('button', { name: /Generate .gitignore/i }).click();
-  await expect(page.locator('.gitignore-output')).toBeVisible();
-
-  // Clear
-  const clearButton = page.getByRole('button', { name: /Clear All/i });
-  await expect(clearButton).toBeVisible();
-  await clearButton.click();
-
-  await expect(page.locator('.gitignore-output')).toHaveCount(0);
-  await expect(page.getByText('Select templates below')).toBeVisible();
-});
-
-test('mobile sidebar backdrop closes sidebar', async ({ page }) => {
-  await page.setViewportSize({ width: 375, height: 667 });
-  await page.goto('/');
-
-  await ensureToolbarInteractable(page);
-  const sidebar = page.locator('.tool-shell-sidebar');
-
-  await page.locator('[aria-label="Show options"]').click();
-  await expect(sidebar).toHaveClass(/open/);
-
-  await page.locator('.sidebar-backdrop').evaluate((el) => (el as HTMLElement).click());
-  await expect(sidebar).toHaveClass(/collapsed/);
-});
-
-test('404 page works', async ({ page }) => {
-  const response = await page.goto('/this-page-does-not-exist');
-  expect(response?.status()).toBe(404);
-  const contentType = response?.headers()['content-type'] ?? '';
-  expect(contentType).toContain('text/html');
-  await expect(page.getByRole('heading', { name: 'Page not found' })).toBeVisible();
-});
-
-test('visual regression — default view', async ({ page, browserName }) => {
-  if (browserName !== 'chromium') return;
-  await page.goto('/');
-  await page.waitForSelector('.tool-shell-canvas');
-  await expect(page.locator('.tool-shell')).toBeVisible();
+  test('visual regression — default view', async ({ page }, testInfo) => {
+    await page.goto('/');
+    await page.waitForSelector('.tool-shell-canvas');
+    await expect(page.locator('.tool-shell')).toBeVisible();
+    if (testInfo.project.name.includes('Mobile')) {
+      await expect(page.locator('.tool-shell-canvas')).toBeVisible();
+    }
+  });
 });

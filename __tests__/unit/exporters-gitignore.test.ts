@@ -18,7 +18,7 @@ describe('Gitignore JSON exporter', () => {
     const result = await jsonExporter.export(el, makeOptions());
     expect(result.success).toBe(true);
     if (result.success && result.data) {
-      const text = await result.data.text();
+      const text = typeof result.data === 'string' ? result.data : await result.data.text();
       const parsed = JSON.parse(text);
       expect(parsed.entries).toContain('node_modules/');
       expect(parsed.entries).toContain('build/');
@@ -33,7 +33,7 @@ describe('Gitignore JSON exporter', () => {
     const result = await jsonExporter.export(el, makeOptions());
     expect(result.success).toBe(true);
     if (result.success && result.data) {
-      const text = await result.data.text();
+      const text = typeof result.data === 'string' ? result.data : await result.data.text();
       const parsed = JSON.parse(text);
       expect(parsed.entries).toContain('node_modules/');
       expect(parsed.entries).toContain('.pytest_cache/');
@@ -57,7 +57,7 @@ describe('Gitignore JSON exporter', () => {
     const result = await jsonExporter.export(el, makeOptions());
     expect(result.success).toBe(true);
     if (result.success && result.data) {
-      const text = await result.data.text();
+      const text = typeof result.data === 'string' ? result.data : await result.data.text();
       const parsed = JSON.parse(text);
       expect(parsed).toHaveProperty('generated');
       expect(parsed.source).toBe('gitignore-generator.itsjust.tools');
@@ -78,7 +78,7 @@ describe('Gitignore JSON exporter', () => {
     const result = await jsonExporter.export(el, makeOptions());
     expect(result.success).toBe(true);
     if (result.success && result.data) {
-      const text = await result.data.text();
+      const text = typeof result.data === 'string' ? result.data : await result.data.text();
       const parsed = JSON.parse(text);
       expect(parsed.entries).toEqual(['node_modules/', 'build/']);
       expect(parsed.customRules).toEqual(['my-local.file', 'secrets/']);
@@ -124,7 +124,7 @@ describe('Gitignore TXT exporter', () => {
     const result = await txtExporter.export(el, makeOptions());
     expect(result.success).toBe(true);
     if (result.success && result.data) {
-      const text = await result.data.text();
+      const text = typeof result.data === 'string' ? result.data : await result.data.text();
       expect(text).toBe('node_modules/\nbuild/');
     }
   });
@@ -136,7 +136,7 @@ describe('Gitignore TXT exporter', () => {
     const result = await txtExporter.export(el, makeOptions());
     expect(result.success).toBe(true);
     if (result.success && result.data) {
-      const text = await result.data.text();
+      const text = typeof result.data === 'string' ? result.data : await result.data.text();
       expect(text).toContain('node_modules/');
       expect(text).toContain('__pycache__/');
     }
@@ -161,7 +161,7 @@ describe('Gitignore TXT exporter', () => {
     const result = await txtExporter.export(el, makeOptions());
     expect(result.success).toBe(true);
     if (result.success && result.data) {
-      const text = await result.data.text();
+      const text = typeof result.data === 'string' ? result.data : await result.data.text();
       expect(text).toBe(content);
     }
   });

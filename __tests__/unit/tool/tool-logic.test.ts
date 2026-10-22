@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createMockToolState } from '@itsjust/core/testing';
 import { gitignoreTool, buildGitignore } from '@/tool/tool-definition';
-import type { GitignoreState } from '@/tool/types';
+import type { GitignoreState, GitignoreTemplate } from '@/tool/types';
 
 const defaultState: GitignoreState = {
   selectedTemplates: [],

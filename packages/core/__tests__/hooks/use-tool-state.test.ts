@@ -165,4 +165,32 @@ describe('useToolState', () => {
     expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Quota exceeded'));
     warnSpy.mockRestore();
   });
+
+  it('records exactly one history entry per change', () => {
+    const { result } = renderHook(() => useToolState({ n: 0 }));
+
+    act(() => result.current.setData({ n: 1 }));
+    act(() => result.current.setData({ n: 2 }));
+
+    // One undo must land on the previous value, not on an intermediate duplicate.
+    act(() => result.current.undo());
+    expect(result.current.data).toEqual({ n: 1 });
+
+    act(() => result.current.undo());
+    expect(result.current.data).toEqual({ n: 0 });
+    expect(result.current.canUndo).toBe(false);
+  });
+
+  it('keeps functional updates sequential', () => {
+    const { result } = renderHook(() => useToolState({ n: 0 }));
+
+    act(() => {
+      result.current.setData((prev) => ({ n: prev.n + 1 }));
+      result.current.setData((prev) => ({ n: prev.n + 1 }));
+    });
+
+    expect(result.current.data).toEqual({ n: 2 });
+    act(() => result.current.undo());
+    expect(result.current.data).toEqual({ n: 1 });
+  });
 });

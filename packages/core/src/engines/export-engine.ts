@@ -44,7 +44,7 @@ function triggerDownload(result: ExportResult): void {
 }
 
 export class ExportEngine {
-  private exporters: Partial<Record<ExportFormat, Exporter>> = { json: jsonExporter };
+  private exporters: Partial<Record<ExportFormat, Exporter>> = {};
   private localLoaders: Partial<Record<ExportFormat, ExporterLoader>>;
   private cachedFormats: ExportFormat[] = [];
   private maxExporterCacheSize: number;
@@ -65,7 +65,9 @@ export class ExportEngine {
   }
 
   getSupportedFormats(): ExportFormat[] {
-    return Object.keys(this.exporters) as ExportFormat[];
+    // The built-in JSON exporter is always available as a fallback, even when
+    // a tool registers none of its own.
+    return [...new Set<ExportFormat>(['json', ...(Object.keys(this.exporters) as ExportFormat[])])];
   }
 
   private touchCache(format: ExportFormat): void {
@@ -87,7 +89,11 @@ export class ExportEngine {
     }
 
     const loader = this.localLoaders[format] ?? exporterLoaders[format];
-    if (!loader) return undefined;
+    // A tool-registered exporter always wins over the built-in fallback; the
+    // built-in JSON exporter only covers tools that register none.
+    if (!loader) {
+      return format === 'json' ? jsonExporter : undefined;
+    }
 
     const mod = await loader();
     const exporter = 'default' in mod ? mod.default : mod.exporter;

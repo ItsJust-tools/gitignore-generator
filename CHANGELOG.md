@@ -9,11 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Playwright E2E coverage for core workflows**: Separate specs for state persistence across reload, keyboard shortcut dispatch (`Ctrl+Z`/`Ctrl+Y`, `Ctrl+S`, `Ctrl+B`, tool shortcuts), export payload verification (JSON/TXT/PNG/share), dark-light theme persistence, and drag-and-drop import including corrupt and oversized payloads. Shared helpers live in `__tests__/e2e/utils.ts`.
+- **Drag-and-drop import UI**: Dropping a file anywhere on the page imports it and shows a drop overlay; invalid, unsupported, and oversized files surface an error toast.
+- **`Ctrl+S` save shortcut**: Calls `saveNow()` on the tool state instead of being swallowed.
 - **Common Stack Combinations table**: Quick-pick template combinations for popular project types (Node.js API, React + Vite, Python + Django, etc.) added to README.
 - **Docker template expansion**: Added `.env` and `*.tgz` to Docker template rules for better coverage of Docker project exclusions.
 
 ### Fixed
 
+- **Undo required two presses per action**: `setData` pushed history inside the React state updater, which React can invoke twice, duplicating entries. History is now updated once per call with a ref mirroring the latest state.
+- **Tool JSON exporter was never used**: `ExportEngine` pre-registered the generic built-in JSON exporter, which shadowed tool-specific structured exporters (so exports carried raw state instead of parsed entries). A tool-registered exporter now takes precedence, with the built-in one as fallback.
+- **Import errors were silent**: `useTool` now wires `onImportError` to an error toast.
+- **Export carried UI chrome**: The canvas exposes `data-content`, so text exporters read the generated `.gitignore` rather than rendered labels.
 - **README template count accuracy**: Changed "60+" to "60" to reflect the exact number of available templates.
 - **README heading hierarchy**: Improved structure with clearer section ordering.
 

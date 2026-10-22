@@ -59,6 +59,9 @@ export function ToolCanvas({ state, canvasRef, onCopy, onDownload }: ToolCanvasP
       className="gitignore-canvas"
       role="application"
       aria-label=".gitignore Generator"
+      // Exporters read the generated text from this attribute so hidden UI
+      // chrome (line numbers, labels, buttons) never leaks into export payloads.
+      data-content={state.outputContent}
     >
       {state.outputContent ? (
         <div className="gitignore-result">
