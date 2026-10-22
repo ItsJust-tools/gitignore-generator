@@ -65,6 +65,7 @@ export function useTool<TState>(
   }
 
   const state = useToolState<TState>(tool.initialState, { key: canonicalId });
+  const { toast } = useToast();
   const { exportTo, abortExport, supportedFormats, isExporting } = useExport(
     canvasRef,
     tool.config,
@@ -83,8 +84,8 @@ export function useTool<TState>(
         }
       }
     },
+    onImportError: (error) => toast(error, 'error'),
   });
-  const { toast } = useToast();
 
   const handleExport = useCallback(
     async (format: ExportFormat) => {
@@ -101,7 +102,7 @@ export function useTool<TState>(
     [exportTo, toast]
   );
 
-  const { canUndo, canRedo, undo, redo, setData } = state;
+  const { canUndo, canRedo, undo, redo, setData, saveNow } = state;
 
   const handleReset = useCallback(() => {
     if (typeof window !== 'undefined') {
@@ -119,9 +120,10 @@ export function useTool<TState>(
       canRedo,
       onExport: handleExport,
       onReset: handleReset,
+      onSave: () => void saveNow(),
       supportedFormats,
     }),
-    [canUndo, canRedo, undo, redo, handleExport, handleReset, supportedFormats]
+    [canUndo, canRedo, undo, redo, handleExport, handleReset, saveNow, supportedFormats]
   );
 
   return {

@@ -90,3 +90,34 @@ describe('ExportEngine', () => {
     vi.useRealTimers();
   });
 });
+
+describe('ExportEngine exporter precedence', () => {
+  it('prefers a tool-registered JSON exporter over the built-in fallback', async () => {
+    const engine = new ExportEngine({
+      json: async () => ({
+        exporter: {
+          format: 'json',
+          export: async (_el, options) => ({
+            success: true,
+            data: JSON.stringify({ source: 'tool-exporter' }),
+            filename: options.filename ?? 'tool.json',
+            format: 'json',
+          }),
+        },
+      }),
+    });
+
+    const result = await engine.export(document.createElement('div'), { format: 'json' });
+    expect(result.success).toBe(true);
+    expect(result.data).toBe(JSON.stringify({ source: 'tool-exporter' }));
+  });
+
+  it('falls back to the built-in JSON exporter when the tool registers none', async () => {
+    const engine = new ExportEngine();
+    const result = await engine.export(document.createElement('div'), { format: 'json' }, () =>
+      JSON.stringify({ source: 'serializer' })
+    );
+    expect(result.success).toBe(true);
+    expect(result.data).toBe(JSON.stringify({ source: 'serializer' }));
+  });
+});

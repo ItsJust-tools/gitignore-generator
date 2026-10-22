@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ToolShell, useTool, ImportExport } from '@itsjust/core';
+import { ToolShell, useTool, ImportExport, useDragAndDropImport } from '@itsjust/core';
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string';
 import {
   toolConfig,
@@ -29,6 +29,15 @@ export default function ToolClient() {
   const title = toolConfig.name;
   const [isEditingBrand, setIsEditingBrand] = useState(false);
   const [editValue, setEditValue] = useState(title);
+
+  // Accept files dropped anywhere on the page. Corrupt or unsupported payloads
+  // surface an error toast from the import pipeline instead of failing silently.
+  const { isDragging } = useDragAndDropImport({
+    onImport: (file) => {
+      void tool.importFromFile(file);
+    },
+    acceptedFormats: toolConfig.exportFormats,
+  });
 
   useEffect(() => {
     document.title = title;
@@ -325,6 +334,11 @@ export default function ToolClient() {
         onCopy={handleCopy}
         onDownload={handleDownload}
       />
+      {isDragging && (
+        <div className="drop-overlay" role="presentation" aria-hidden="true">
+          <div className="drop-overlay-content">Drop file to import</div>
+        </div>
+      )}
     </div>
   );
 
