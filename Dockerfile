@@ -18,9 +18,19 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
+
+# Create a non-privileged user and group
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nextjs -u 1001
+
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+
+# Correct ownership for non-root user
+RUN chown -R nextjs:nodejs /app
+USER nextjs
+
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
