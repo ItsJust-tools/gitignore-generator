@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
@@ -68,6 +70,34 @@ describe('app and seo', () => {
     expect(man.name).toBe(templateMetadata.appName);
     expect(rob.sitemap).toBe('http://localhost:3000/sitemap.xml');
     expect(sm[0]?.url).toBe('http://localhost:3000');
+  });
+
+  it('declares maskable PWA icons with a matching any-purpose PNG', () => {
+    const icons = manifest().icons ?? [];
+
+    const maskable = icons.filter((icon) => icon.purpose === 'maskable');
+    expect(maskable.map((icon) => icon.sizes)).toEqual(
+      expect.arrayContaining(['192x192', '512x512'])
+    );
+
+    for (const icon of maskable) {
+      expect(icon.type).toBe('image/png');
+      // Every maskable icon needs an any-purpose PNG of the same size so
+      // launchers that cannot crop still get a crisp raster icon.
+      expect(icons).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ sizes: icon.sizes, type: 'image/png', purpose: 'any' }),
+        ])
+      );
+      // The asset must exist so the manifest never points at a 404.
+      expect(existsSync(join(process.cwd(), 'public', icon.src as string))).toBe(true);
+    }
+
+    expect(icons).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ src: templateMetadata.iconPath, purpose: 'any' }),
+      ])
+    );
   });
 
   it('renders json-ld script safely', () => {

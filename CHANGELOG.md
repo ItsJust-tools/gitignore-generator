@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Maskable PWA icons**: `manifest.ts` now declares `purpose: "maskable"` PNG icons at 192×192 and 512×512, generated full-bleed with the glyph inside the 80% safe zone so Android and other launchers no longer letterbox the icon on the home screen. Matching `purpose: "any"` PNG icons were added for launchers that cannot rasterise the SVG. Regenerate them with `npm run icons:generate`.
+
 - **Playwright E2E coverage for core workflows**: Separate specs for state persistence across reload, keyboard shortcut dispatch (`Ctrl+Z`/`Ctrl+Y`, `Ctrl+S`, `Ctrl+B`, tool shortcuts), export payload verification (JSON/TXT/PNG/share), dark-light theme persistence, and drag-and-drop import including corrupt and oversized payloads. Shared helpers live in `__tests__/e2e/utils.ts`.
 - **Drag-and-drop import UI**: Dropping a file anywhere on the page imports it and shows a drop overlay; invalid, unsupported, and oversized files surface an error toast.
 - **`Ctrl+S` save shortcut**: Calls `saveNow()` on the tool state instead of being swallowed.

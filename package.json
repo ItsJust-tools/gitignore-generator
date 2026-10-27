@@ -28,6 +28,7 @@
     "build": "npm run build -w @itsjust/core && next build",
     "start": "next start",
     "lint": "mkdir -p test-results && eslint",
+    "icons:generate": "node scripts/generate-icons.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
