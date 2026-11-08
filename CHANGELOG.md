@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-06-01
+
+### Added
+
+- **Deno, Bun, and Solid.js templates**: Three new template presets for modern runtimes and the Solid.js framework.
+- **7 additional templates and Quick Pick presets**: Zig, Crystal, Gradle, Biome, pnpm, Playwright, and more, plus quick-pick preset combinations for popular project types.
+- **Select all / deselect all controls**: Batch-select every template or clear the whole selection at once; Quick Pick partial selections now toggle correctly.
+- **Scrollable sidebar and responsive filter tabs**: The template sidebar scrolls independently, and filter tabs adapt to narrow viewports.
+- **Keyboard shortcuts and a11y improvements**: `Ctrl+Enter` generates the `.gitignore`, filter tabs are fully keyboard-navigable, and a Skip-to-Main-Content bypass link was added (WCAG 2.2).
+- **`.txt` export**: New plain-text export format alongside existing exporters; generated filenames are sanitized against invalid OS characters.
+- **Help page**: Added to replace the previous dead link in the toolbar.
+- **Comprehensive Playwright E2E coverage**: Specs for state persistence, keyboard shortcuts, exports, theme, and drag-and-drop import of corrupt/oversized payloads.
+- **Maskable PWA icons**: `manifest.ts` now declares maskable plus `any` PNG icons at 192×192 and 512×512.
+
+### Fixed
+
+- **macOS template cleanup and platform categories**: Corrected rules and improved platform grouping.
+- **Custom template no longer outputs empty lines**: The `custom` rule entry no longer contains a dummy empty string; an unused custom template entry was removed.
+- **Canvas copy and empty-state UX**: Copy from the canvas works reliably and the empty state reads better.
+- **CI and deployment pipeline restored**: Lockfile drift and an untagged README fence repaired so CI runs again.
+- **Export system**: Registered unlisted exporters so tool-specific exporters take precedence, and QuotaExceededError / blocked-storage failures are handled gracefully.
+- **CSS performance**: Replaced generic `transition-all` with specific composite properties.
+- **Defensive state deserialization**: `deserialize` now catches corrupt persisted state instead of crashing.
+- **README accuracy**: Template counts and Docker template rules (`.env`, `*.tgz`) corrected.
+
+### Changed
+
+- **Dependency updates**: lucide-react, TypeScript 6, ESLint 10, Next.js and testing group bumps.
+
 ## [Unreleased]
 
 ### Added
