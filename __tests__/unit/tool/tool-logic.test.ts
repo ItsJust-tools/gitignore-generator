@@ -125,6 +125,21 @@ describe('.gitignore Generator deserialize', () => {
     }
   });
 
+  it('returns a failure result instead of throwing on getter that throws', () => {
+    const throwing = {
+      get selectedTemplates() {
+        throw new Error('boom');
+      },
+    };
+    expect(() => gitignoreTool.deserialize(throwing)).not.toThrow();
+    const result = gitignoreTool.deserialize(throwing);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error).toContain('Failed to deserialize');
+      expect(result.error).toContain('boom');
+    }
+  });
+
   it('serializes state to JSON string', () => {
     const json = gitignoreTool.serialize(defaultState);
     expect(() => JSON.parse(json)).not.toThrow();

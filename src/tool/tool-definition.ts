@@ -785,13 +785,22 @@ export const gitignoreTool: Tool<GitignoreState> = {
   },
   serialize: (state) => JSON.stringify(state, null, 2),
   deserialize: (data) => {
-    if (isGitignoreState(data)) {
-      return { success: true, data };
+    try {
+      if (isGitignoreState(data)) {
+        return { success: true, data };
+      }
+      return {
+        success: false,
+        error: 'Invalid data format: expected GitignoreState object',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: `Failed to deserialize gitignore state: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`,
+      };
     }
-    return {
-      success: false,
-      error: 'Invalid data format: expected GitignoreState object',
-    };
   },
   exporters: [
     {
