@@ -42,6 +42,7 @@ vi.mock('@itsjust/core', () => ({
       data: {
         selectedTemplates: [],
         customRules: '',
+        customRulesPosition: 'append',
         outputContent: '',
         visibilityFilter: 'all',
         searchQuery: '',

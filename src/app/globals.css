@@ -1306,6 +1306,94 @@ body {
   opacity: 0.6;
 }
 
+/* Syntax-highlighted custom rules editor: overlay + transparent textarea */
+.gitignore-editor-wrapper {
+  position: relative;
+}
+
+.gitignore-highlight {
+  position: absolute;
+  inset: 0;
+  padding: 0.5rem 0.625rem;
+  font-family: ui-monospace, Menlo, Monaco, monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--foreground);
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: var(--radius);
+}
+
+.gitignore-highlight-line {
+  min-height: 1.5;
+  min-height: 0.75rem * 1.5;
+}
+
+.gitignore-textarea-editor {
+  position: relative;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--foreground);
+}
+
+.gitignore-textarea-editor::selection {
+  background: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.gi-comment {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.gi-negation {
+  color: #e4574f;
+  font-weight: 700;
+}
+
+.gi-dir {
+  color: #5a9fd6;
+  text-decoration: underline;
+}
+
+.gi-glob {
+  color: #d6a24d;
+}
+
+.gi-plain {
+  color: var(--foreground);
+}
+
+.custom-rules-position {
+  display: inline-flex;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.position-btn {
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--muted-foreground, var(--muted));
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+
+.position-btn:hover {
+  border-color: var(--accent);
+}
+
+.position-btn.active {
+  background: var(--accent);
+  color: var(--accent-foreground, #fff);
+  border-color: var(--accent);
+}
+
 .gitignore-btn {
   display: inline-flex;
   align-items: center;

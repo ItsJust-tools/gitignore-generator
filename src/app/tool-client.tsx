@@ -13,7 +13,7 @@ import {
   ToolSidebar,
   TEMPLATES,
 } from '@/tool';
-import type { GitignoreTemplate, VisibilityFilter } from '@/tool/types';
+import type { CustomRulesPosition, GitignoreTemplate, VisibilityFilter } from '@/tool/types';
 
 export default function ToolClient() {
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -71,6 +71,17 @@ export default function ToolClient() {
     [setToolData]
   );
 
+  const handleCustomRulesPositionChange = useCallback(
+    (position: CustomRulesPosition) => {
+      setToolData((prev) => ({
+        ...prev,
+        customRulesPosition: position,
+        outputContent: '',
+      }));
+    },
+    [setToolData]
+  );
+
   const handleFilterChange = useCallback(
     (filter: VisibilityFilter) => {
       setToolData((prev) => ({
@@ -94,7 +105,11 @@ export default function ToolClient() {
   const handleGenerate = useCallback(() => {
     setToolData((prev) => ({
       ...prev,
-      outputContent: buildGitignore(prev.selectedTemplates, prev.customRules),
+      outputContent: buildGitignore(
+        prev.selectedTemplates,
+        prev.customRules,
+        prev.customRulesPosition
+      ),
     }));
     showToast('.gitignore generated', 'success');
   }, [setToolData, showToast]);
@@ -104,6 +119,7 @@ export default function ToolClient() {
       ...prev,
       selectedTemplates: [],
       customRules: '',
+      customRulesPosition: 'append',
       outputContent: '',
       searchQuery: '',
       visibilityFilter: 'all',
@@ -317,6 +333,7 @@ export default function ToolClient() {
       onToggleTemplate={handleToggleTemplate}
       onBatchRemove={handleBatchRemoveTemplates}
       onCustomRulesChange={handleCustomRulesChange}
+      onCustomRulesPositionChange={handleCustomRulesPositionChange}
       onFilterChange={handleFilterChange}
       onSearchChange={handleSearchChange}
       onGenerate={handleGenerate}
