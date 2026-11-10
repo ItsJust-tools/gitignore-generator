@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import type {
   CustomRulesPosition,
   GitignoreState,
@@ -53,6 +53,44 @@ export function ToolSidebar({
   onDeselectAll,
 }: ToolSidebarProps) {
   const filterTabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const templateGridRef = useRef<HTMLDivElement | null>(null);
+  const [activeTemplateIndex, setActiveTemplateIndex] = useState(0);
+
+  /** Move focus between template cards with arrow keys and toggle with Enter/Space. */
+  const moveTemplateFocus = useCallback((index: number) => {
+    const cards = templateGridRef.current?.querySelectorAll<HTMLElement>('.template-card');
+    if (!cards || cards.length === 0) return;
+    const clamped = Math.max(0, Math.min(index, cards.length - 1));
+    setActiveTemplateIndex(clamped);
+    cards[clamped]?.focus();
+  }, []);
+
+  const handleTemplateGridKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const cards = templateGridRef.current?.querySelectorAll<HTMLElement>('.template-card');
+      const count = cards?.length ?? 0;
+      if (count === 0) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        moveTemplateFocus(activeTemplateIndex + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        moveTemplateFocus(activeTemplateIndex - 1);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        moveTemplateFocus(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        moveTemplateFocus(count - 1);
+      } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const card = cards?.[activeTemplateIndex];
+        const id = card?.getAttribute('data-template-id');
+        if (id) onToggleTemplate(id as GitignoreTemplate);
+      }
+    },
+    [activeTemplateIndex, moveTemplateFocus, onToggleTemplate]
+  );
 
   /**
    * Handle keyboard arrow navigation on the filter tab bar.
@@ -121,9 +159,11 @@ export function ToolSidebar({
                   // Toggle: if all selected, deselect them all in one batch;
                   // otherwise add only the missing ones.
                   if (allSelected) {
-                    onBatchRemove
-                      ? onBatchRemove(preset.templates)
-                      : preset.templates.forEach((t) => onToggleTemplate(t));
+                    if (onBatchRemove) {
+                      onBatchRemove(preset.templates);
+                    } else {
+                      preset.templates.forEach((t) => onToggleTemplate(t));
+                    }
                   } else {
                     for (const t of preset.templates) {
                       if (!state.selectedTemplates.includes(t)) {
@@ -165,6 +205,36 @@ export function ToolSidebar({
             </button>
           )}
         </div>
+        {/* Selected template chips (keyboard-removable) */}
+        {selectedCount > 0 && (
+          <div className="selected-chips" role="group" aria-label="Selected templates">
+            {state.selectedTemplates.map((id) => {
+              const template = TEMPLATES.find((t) => t.id === id);
+              if (!template) return null;
+              return (
+                <span key={id} className="selected-chip">
+                  <span className="selected-chip-label">
+                    {template.icon} {template.label}
+                  </span>
+                  <button
+                    type="button"
+                    className="selected-chip-remove"
+                    onClick={() => onToggleTemplate(id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Backspace' || e.key === 'Delete') {
+                        e.preventDefault();
+                        onToggleTemplate(id);
+                      }
+                    }}
+                    aria-label={`Remove ${template.label} template`}
+                  >
+                    ✕
+                  </button>
+                </span>
+              );
+            })}
+          </div>
+        )}
         <div className="filter-tabs" role="tablist" aria-label="Template category filter">
           {TEMPLATE_CATEGORIES.map((cat, i) => (
             <button
@@ -244,25 +314,48 @@ export function ToolSidebar({
             )}
           </div>
         ) : (
-          <div className="template-grid">
-            {filteredTemplates.map((template) => (
+          <div
+            className="template-grid"
+            role="listbox"
+            aria-label="Template results"
+            aria-multiselectable="true"
+            tabIndex={-1}
+            ref={templateGridRef}
+            onKeyDown={handleTemplateGridKeyDown}
+          >
+            {filteredTemplates.map((template, index) => (
               <label
                 key={template.id}
                 className={`template-card ${
                   state.selectedTemplates.includes(template.id) ? 'selected' : ''
                 }`}
+                tabIndex={-1}
+                data-template-index={index}
+                data-template-id={template.id}
               >
                 <input
                   type="checkbox"
                   className="template-checkbox"
                   checked={state.selectedTemplates.includes(template.id)}
                   onChange={() => onToggleTemplate(template.id)}
-                  aria-label={`Toggle ${template.label} template`}
+                  tabIndex={-1}
+                  aria-hidden="true"
                 />
                 <div className="template-icon">{template.icon}</div>
-                <div className="template-info">
+                <div
+                  className="template-info"
+                  role="option"
+                  aria-selected={state.selectedTemplates.includes(template.id)}
+                >
                   <div className="template-name">{template.label}</div>
-                  <div className="template-desc">{template.description}</div>
+                  <div className="template-desc">
+                    {template.description}
+                    <span className="visually-hidden">
+                      {state.selectedTemplates.includes(template.id)
+                        ? ' (selected, press Enter to deselect)'
+                        : ' (press Enter to select)'}
+                    </span>
+                  </div>
                 </div>
               </label>
             ))}
