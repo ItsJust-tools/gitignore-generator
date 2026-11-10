@@ -1,8 +1,14 @@
 'use client';
 
-import type { GitignoreState, GitignoreTemplate, VisibilityFilter } from '../types';
-import { TEMPLATES, TEMPLATE_CATEGORIES } from '../types';
 import { useCallback, useMemo, useRef } from 'react';
+import type {
+  CustomRulesPosition,
+  GitignoreState,
+  GitignoreTemplate,
+  VisibilityFilter,
+} from '../types';
+import { TEMPLATES, TEMPLATE_CATEGORIES } from '../types';
+import { GitignoreHighlight } from './gitignore-highlight';
 
 /**
  * Pre-configured quick pick presets for common project stacks.
@@ -24,6 +30,7 @@ interface ToolSidebarProps {
   onToggleTemplate: (id: GitignoreTemplate) => void;
   onBatchRemove?: (ids: GitignoreTemplate[]) => void;
   onCustomRulesChange: (rules: string) => void;
+  onCustomRulesPositionChange?: (position: CustomRulesPosition) => void;
   onFilterChange: (filter: VisibilityFilter) => void;
   onSearchChange: (query: string) => void;
   onGenerate: () => void;
@@ -37,6 +44,7 @@ export function ToolSidebar({
   onToggleTemplate,
   onBatchRemove,
   onCustomRulesChange,
+  onCustomRulesPositionChange,
   onFilterChange,
   onSearchChange,
   onGenerate,
@@ -265,17 +273,49 @@ export function ToolSidebar({
       {/* Custom Rules */}
       <div className="sidebar-section">
         <h3>Custom Rules</h3>
+        {onCustomRulesPositionChange && (
+          <div
+            className="custom-rules-position"
+            role="radiogroup"
+            aria-label="Custom rules position"
+          >
+            <button
+              type="button"
+              role="radio"
+              aria-checked={state.customRulesPosition === 'prepend'}
+              className={`position-btn ${state.customRulesPosition === 'prepend' ? 'active' : ''}`}
+              onClick={() => onCustomRulesPositionChange('prepend')}
+              aria-label="Prepend custom rules before template sections"
+            >
+              ⬆ Prepend
+            </button>
+            <button
+              type="button"
+              role="radio"
+              aria-checked={state.customRulesPosition === 'append'}
+              className={`position-btn ${state.customRulesPosition === 'append' ? 'active' : ''}`}
+              onClick={() => onCustomRulesPositionChange('append')}
+              aria-label="Append custom rules after template sections"
+            >
+              ⬇ Append
+            </button>
+          </div>
+        )}
         <div className="input-group">
-          <textarea
-            value={state.customRules}
-            onChange={(e) => onCustomRulesChange(e.target.value)}
-            className="gitignore-textarea"
-            aria-label="Custom .gitignore rules"
-            placeholder={
-              'Add your own rules here...\ne.g.\nmy-secrets/\n*.local\n!important.config\n# Or a comment explaining a rule\nbuild-output/'
-            }
-            rows={4}
-          />
+          <div className="gitignore-editor-wrapper">
+            <GitignoreHighlight value={state.customRules} />
+            <textarea
+              value={state.customRules}
+              onChange={(e) => onCustomRulesChange(e.target.value)}
+              className="gitignore-textarea gitignore-textarea-editor"
+              aria-label="Custom .gitignore rules"
+              spellCheck={false}
+              placeholder={
+                'Add your own rules here...\ne.g.\nmy-secrets/\n*.local\n!important.config\n# Or a comment explaining a rule\nbuild-output/'
+              }
+              rows={4}
+            />
+          </div>
         </div>
       </div>
 

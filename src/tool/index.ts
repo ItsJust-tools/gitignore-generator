@@ -5,5 +5,5 @@ export { gitignoreTool, buildGitignore, TEMPLATE_RULES } from './tool-definition
 export { ToolCanvas } from './components/tool-canvas';
 export { ToolToolbar } from './components/tool-toolbar';
 export { ToolSidebar } from './components/tool-sidebar';
-export type { GitignoreState, GitignoreTemplate, TemplateInfo } from './types';
+export type { GitignoreState, GitignoreTemplate, TemplateInfo, CustomRulesPosition } from './types';
 export { TEMPLATES, TEMPLATE_CATEGORIES } from './types';

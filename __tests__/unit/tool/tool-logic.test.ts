@@ -6,6 +6,7 @@ import type { GitignoreState, GitignoreTemplate } from '@/tool/types';
 const defaultState: GitignoreState = {
   selectedTemplates: [],
   customRules: '',
+  customRulesPosition: 'append',
   outputContent: '',
   visibilityFilter: 'all',
   searchQuery: '',
@@ -56,6 +57,22 @@ describe('.gitignore Generator logic', () => {
     expect(result).toContain('# Custom rules');
     expect(result).toContain('my-secrets/');
     expect(result).toContain('*.local');
+  });
+
+  it('appends custom rules after templates by default', () => {
+    const result = buildGitignore(['node'], 'my-secrets/', 'append');
+    const templateIndex = result.indexOf('# Node.js');
+    const customIndex = result.indexOf('# Custom rules');
+    expect(customIndex).toBeGreaterThan(templateIndex);
+  });
+
+  it('prepends custom rules before templates when requested', () => {
+    const result = buildGitignore(['node'], 'my-secrets/', 'prepend');
+    const customIndex = result.indexOf('# Custom rules');
+    const templateIndex = result.indexOf('# Node.js');
+    expect(customIndex).toBeGreaterThan(-1);
+    expect(templateIndex).toBeGreaterThan(customIndex);
+    expect(result).toContain('my-secrets/');
   });
 
   it('generates output with macOS template', () => {

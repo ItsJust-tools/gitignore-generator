@@ -69,9 +69,13 @@ export type GitignoreTemplate =
 
 export type VisibilityFilter = 'all' | 'os' | 'ide' | 'language' | 'framework' | 'platform';
 
+/** Whether user custom rules are written before ('prepend') or after ('append') the template sections. */
+export type CustomRulesPosition = 'prepend' | 'append';
+
 export interface GitignoreState {
   selectedTemplates: GitignoreTemplate[];
   customRules: string;
+  customRulesPosition: CustomRulesPosition;
   outputContent: string;
   visibilityFilter: VisibilityFilter;
   searchQuery: string;
