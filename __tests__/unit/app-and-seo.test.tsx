@@ -142,6 +142,7 @@ describe('app and seo', () => {
       visibilityFilter: 'all',
       searchQuery: '',
       copied: false,
+        customRulesPosition: 'append',
     };
     expect(gitignoreTool.deserialize(validState)).toEqual({
       success: true,
@@ -172,6 +173,7 @@ describe('app and seo', () => {
       visibilityFilter: 'all',
       searchQuery: '',
       copied: false,
+        customRulesPosition: 'append',
     };
 
     render(
