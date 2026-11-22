@@ -634,6 +634,81 @@ describe('exporters', () => {
       appendChildSpy.mockRestore();
     });
 
+    it('generates timestamped filename when none provided and applies theme/contrast', async () => {
+      const el = document.createElement('div');
+      el.textContent = 'themed pdf';
+
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.documentElement.setAttribute('data-contrast', 'high');
+
+      let capturedHtml = '';
+      const printMock = vi.fn();
+      const appendChildSpy = vi.spyOn(document.body, 'appendChild').mockImplementation((node) => {
+        if (node instanceof HTMLIFrameElement || (node as HTMLElement).tagName === 'IFRAME') {
+          const iframe = node as HTMLIFrameElement;
+          const mockDoc = {
+            open: vi.fn(),
+            write: vi.fn((html: string) => {
+              capturedHtml = html;
+            }),
+            close: vi.fn(),
+          };
+          Object.defineProperty(iframe, 'contentDocument', {
+            get: () => mockDoc,
+            configurable: true,
+          });
+          Object.defineProperty(iframe, 'contentWindow', {
+            get: () => ({ print: printMock }),
+            configurable: true,
+          });
+        }
+        return node;
+      });
+
+      try {
+        const result = await pdfExporter.export(
+          el,
+          makeOptions({ format: 'pdf', allowSensitiveData: true })
+        );
+
+        expect(result.success).toBe(true);
+        expect(result.filename).toMatch(/^export-\d+\.pdf$/);
+        expect(printMock).toHaveBeenCalledTimes(1);
+        expect(capturedHtml).toContain('data-theme="dark"');
+        expect(capturedHtml).toContain('data-contrast="high"');
+      } finally {
+        appendChildSpy.mockRestore();
+        document.documentElement.removeAttribute('data-theme');
+        document.documentElement.removeAttribute('data-contrast');
+      }
+    });
+
+    it('uses timestamped filename on failure when none provided', async () => {
+      const el = document.createElement('div');
+
+      const appendChildSpy = vi.spyOn(document.body, 'appendChild').mockImplementation((node) => {
+        if (node instanceof HTMLIFrameElement || (node as HTMLElement).tagName === 'IFRAME') {
+          const iframe = node as HTMLIFrameElement;
+          Object.defineProperty(iframe, 'contentDocument', {
+            get: () => null,
+            configurable: true,
+          });
+        }
+        return node;
+      });
+
+      const result = await pdfExporter.export(
+        el,
+        makeOptions({ format: 'pdf', allowSensitiveData: true })
+      );
+
+      expect(result.success).toBe(false);
+      expect(result.filename).toMatch(/^export-\d+\.pdf$/);
+      expect(result.error).toContain('Failed to create print iframe');
+
+      appendChildSpy.mockRestore();
+    });
+
     it('includes tool content in pdf iframe HTML', async () => {
       const el = document.createElement('div');
       el.innerHTML = '<h1>Test Title</h1><p>Test paragraph</p>';

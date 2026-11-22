@@ -2,18 +2,20 @@ import { test, expect } from '@playwright/test';
 import { generate, gotoTool, isMobileProject, selectTemplate } from './utils';
 import { readFile } from 'node:fs/promises';
 
+// The template grid in the sidebar also uses role="listbox", so the export
+// menu must be scoped to its own container to avoid strict-mode violations.
 async function openExportMenu(page: import('@playwright/test').Page) {
   await page.getByRole('button', { name: /^Export$/i }).click();
-  const listbox = page.getByRole('listbox');
+  const listbox = page.locator('.export-dropdown').getByRole('listbox');
   await expect(listbox).toBeVisible();
   return listbox;
 }
 
 async function exportAs(page: import('@playwright/test').Page, format: string) {
-  await openExportMenu(page);
+  const listbox = await openExportMenu(page);
   const [download] = await Promise.all([
     page.waitForEvent('download'),
-    page.getByRole('option', { name: new RegExp(format, 'i') }).click(),
+    listbox.getByRole('option', { name: new RegExp(format, 'i') }).click(),
   ]);
   return download;
 }
@@ -26,13 +28,15 @@ test.describe('export payload verification', () => {
     await generate(page);
 
     await openExportMenu(page);
-    const options = page.getByRole('option');
+    const options = page.locator('.export-dropdown').getByRole('option');
     await expect(options).toHaveCount(6);
     for (const label of ['JSON Data', 'Text File', 'PNG Image', 'PDF Document']) {
-      await expect(page.getByRole('option', { name: new RegExp(label, 'i') })).toBeVisible();
+      await expect(
+        page.locator('.export-dropdown').getByRole('option', { name: new RegExp(label, 'i') })
+      ).toBeVisible();
     }
     await page.keyboard.press('Escape');
-    await expect(page.getByRole('listbox')).toHaveCount(0);
+    await expect(page.locator('.export-dropdown').getByRole('listbox')).toHaveCount(0);
   });
 
   test('JSON export contains every generated entry and custom rule', async ({ page }, testInfo) => {

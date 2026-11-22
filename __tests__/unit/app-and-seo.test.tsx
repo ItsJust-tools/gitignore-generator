@@ -62,6 +62,35 @@ describe('app and seo', () => {
     expect(jsonLd.featureList.length).toBeGreaterThan(0);
   });
 
+  it('uses the configured ogImage when present and NEXT_PUBLIC_URL when set', () => {
+    const config = { ...toolConfig, ogImage: '/custom-og.png' };
+    const metadata = generateToolMetadata(config);
+    const ogUrl = metadata.openGraph?.images ? getOgImageUrl(metadata.openGraph.images) : undefined;
+    // SITE_URL is resolved from env at module load (default dev URL).
+    expect(ogUrl).toBe('http://localhost:3000/custom-og.png');
+
+    const jsonLd = generateJsonLd({
+      ...toolConfig,
+      features: {
+        ...toolConfig.features,
+        export: false,
+        autoSave: false,
+        undoRedo: false,
+        darkMode: false,
+      },
+    });
+    expect(jsonLd.featureList).toEqual([]);
+
+    // getPublicSiteUrl reads env at call time, so the stub exercises the
+    // NEXT_PUBLIC_URL branch of the fallback expression.
+    vi.stubEnv('NEXT_PUBLIC_URL', 'https://gitignore-generator.itsjust.tools');
+    try {
+      expect(getPublicSiteUrl()).toBe('https://gitignore-generator.itsjust.tools');
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
   it('returns site manifest, robots and sitemap', () => {
     const man = manifest();
     const rob = robots();
@@ -142,7 +171,7 @@ describe('app and seo', () => {
       visibilityFilter: 'all',
       searchQuery: '',
       copied: false,
-        customRulesPosition: 'append',
+      customRulesPosition: 'append',
     };
     expect(gitignoreTool.deserialize(validState)).toEqual({
       success: true,
@@ -173,7 +202,7 @@ describe('app and seo', () => {
       visibilityFilter: 'all',
       searchQuery: '',
       copied: false,
-        customRulesPosition: 'append',
+      customRulesPosition: 'append',
     };
 
     render(
